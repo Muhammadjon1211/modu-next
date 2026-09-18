@@ -34,6 +34,14 @@ const headCells: readonly HeadCell<Data>[] = [
 	{ id: 'orderStatus', label: 'Status', numeric: false, sortable: true },
 ];
 
+/** mirrors the backend state machine so the select only offers legal moves */
+const nextStatuses: Record<OrderStatus, OrderStatus[]> = {
+	[OrderStatus.PAUSE]: [],
+	[OrderStatus.PROCESS]: [OrderStatus.FINISH, OrderStatus.CANCEL],
+	[OrderStatus.FINISH]: [],
+	[OrderStatus.CANCEL]: [],
+};
+
 interface OrderListType {
 	orders: OrderEntity[];
 	updateOrderHandler: (input: { _id: string; orderStatus: OrderStatus }) => void;
@@ -99,11 +107,15 @@ const OrderList = (props: OrderListType) => {
 											size={'small'}
 											value={ele.orderStatus}
 											className={`status-select ${ele.orderStatus.toLowerCase()}`}
-											disabled={ele.orderStatus === OrderStatus.PAUSE}
+											disabled={!nextStatuses[ele.orderStatus].length}
 											onChange={(e) => updateOrderHandler({ _id: ele._id, orderStatus: e.target.value as OrderStatus })}
 										>
 											{Object.values(OrderStatus).map((status) => (
-												<MenuItem key={status} value={status} disabled={status === OrderStatus.PAUSE}>
+												<MenuItem
+													key={status}
+													value={status}
+													disabled={status !== ele.orderStatus && !nextStatuses[ele.orderStatus].includes(status)}
+												>
 													{status}
 												</MenuItem>
 											))}
