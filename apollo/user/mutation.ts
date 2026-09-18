@@ -50,6 +50,16 @@ export const UPDATE_MEMBER = gql`
 	}
 `;
 
+export const UPDATE_MY_CREDENTIALS = gql`
+	mutation UpdateMyCredentials($input: CredentialsUpdate!) {
+		updateMyCredentials(input: $input) {
+			_id
+			memberNick
+			accessToken
+		}
+	}
+`;
+
 export const LIKE_TARGET_MEMBER = gql`
 	mutation LikeTargetMember($input: String!) {
 		likeTargetMember(memberId: $input) {

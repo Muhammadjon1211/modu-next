@@ -9,6 +9,7 @@ import CheckroomOutlinedIcon from '@mui/icons-material/CheckroomOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 const menus = [
 	{ title: 'Dashboard', href: '/_admin', icon: <SpaceDashboardOutlinedIcon /> },
@@ -18,6 +19,7 @@ const menus = [
 	{ title: 'Orders', href: '/_admin/orders', icon: <ReceiptLongOutlinedIcon /> },
 	{ title: 'Returns', href: '/_admin/returns', icon: <AssignmentReturnOutlinedIcon /> },
 	{ title: 'Community', href: '/_admin/community', icon: <ForumOutlinedIcon /> },
+	{ title: 'Settings', href: '/_admin/settings', icon: <SettingsOutlinedIcon /> },
 ];
 
 const AdminMenuList = () => {

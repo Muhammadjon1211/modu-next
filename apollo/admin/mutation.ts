@@ -4,6 +4,16 @@ import { gql } from '@apollo/client';
  *         MEMBER         *
  *************************/
 
+export const CREATE_ADMIN_BY_ADMIN = gql`
+	mutation CreateAdminByAdmin($input: MemberInput!) {
+		createAdminByAdmin(input: $input) {
+			_id
+			memberNick
+			memberType
+		}
+	}
+`;
+
 export const UPDATE_MEMBER_BY_ADMIN = gql`
 	mutation UpdateMemberByAdmin($input: MemberUpdate!) {
 		updateMemberByAdmin(input: $input) {

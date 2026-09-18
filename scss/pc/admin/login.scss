@@ -1,0 +1,503 @@
+/* ------------------------------------------------------------------ */
+/* admin sign-in                                                       */
+/* ------------------------------------------------------------------ */
+#pc-wrap.admin-auth-wrap {
+	min-height: 100vh;
+	background: #0c0c0d;
+
+	.admin-login {
+		flex: 1;
+		flex-direction: row;
+		min-height: 100vh;
+	}
+
+	/* ---------- welcome panel ---------- */
+	.login-hero {
+		position: relative;
+		flex: 1.25;
+		overflow: hidden;
+		padding: 40px 56px;
+		color: #ffffff;
+		isolation: isolate;
+	}
+
+	.orb {
+		position: absolute;
+		z-index: -1;
+		border-radius: 50%;
+		filter: blur(80px);
+		opacity: 0.55;
+		will-change: transform;
+
+		&.orb-a {
+			width: 520px;
+			height: 520px;
+			top: -160px;
+			left: -120px;
+			background: #ff4d2e;
+			animation: orb-drift-a 16s ease-in-out infinite alternate;
+		}
+
+		&.orb-b {
+			width: 440px;
+			height: 440px;
+			bottom: -180px;
+			right: 8%;
+			background: #7a5cff;
+			opacity: 0.4;
+			animation: orb-drift-b 19s ease-in-out infinite alternate;
+		}
+
+		&.orb-c {
+			width: 300px;
+			height: 300px;
+			top: 40%;
+			left: 38%;
+			background: #e9c9a8;
+			opacity: 0.22;
+			animation: orb-drift-c 13s ease-in-out infinite alternate;
+		}
+	}
+
+	// faint dotted texture so the gradients read as a surface, not a glow
+	.grain {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+		background-size: 22px 22px;
+		mask-image: linear-gradient(180deg, #000000 0%, transparent 85%);
+	}
+
+	.hero-top {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		animation: fade-in 0.8s ease both;
+
+		img {
+			height: 28px;
+		}
+
+		.clock {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 7px 14px;
+			border-radius: 999px;
+			background: rgba(255, 255, 255, 0.08);
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			backdrop-filter: blur(8px);
+			font-size: 13px;
+			font-weight: 700;
+			font-variant-numeric: tabular-nums;
+
+			i {
+				width: 7px;
+				height: 7px;
+				border-radius: 50%;
+				background: #3ddc84;
+				animation: pulse-dot 2s ease-in-out infinite;
+			}
+		}
+	}
+
+	.hero-copy {
+		position: relative;
+		z-index: 2;
+		margin-top: 12vh;
+		gap: 18px;
+
+		.greeting {
+			font-size: 15px;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: #ff8a6e;
+			animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s both;
+		}
+
+		h1 {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0 0.28em;
+			font-size: clamp(56px, 7.4vw, 124px);
+			font-weight: 800;
+			line-height: 0.95;
+			letter-spacing: -0.045em;
+
+			.word {
+				display: inline-block;
+				animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+				&:last-child {
+					background: linear-gradient(100deg, #ffffff 0%, #ffd2c4 45%, #ff4d2e 100%);
+					background-size: 200% 100%;
+					-webkit-background-clip: text;
+					background-clip: text;
+					color: transparent;
+					animation:
+						rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+						shimmer 6s ease-in-out 1.2s infinite alternate;
+				}
+			}
+		}
+
+		.rotator {
+			font-size: clamp(20px, 1.9vw, 28px);
+			font-weight: 600;
+			color: rgba(255, 255, 255, 0.72);
+			animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.45s both;
+
+			line-height: 1.3;
+
+			// clips the word as it flips in; inline-flex keeps the text baseline, where an
+			// overflow-hidden inline-block would sit on its bottom edge instead
+			.rotating {
+				display: inline-flex;
+				overflow: hidden;
+				vertical-align: baseline;
+				height: 1.3em;
+			}
+
+			.rotating-word {
+				display: inline-block;
+				color: #ffffff;
+				font-weight: 800;
+				animation: word-flip 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+			}
+		}
+	}
+
+	/* ---------- floating photos ---------- */
+	.photo-stack {
+		position: absolute;
+		right: 6%;
+		bottom: 8%;
+		width: 42%;
+		max-width: 460px;
+		aspect-ratio: 1 / 1;
+		z-index: 1;
+		pointer-events: none;
+
+		.photo {
+			position: absolute;
+			width: 52%;
+			aspect-ratio: 3 / 4;
+			border-radius: 22px;
+			overflow: hidden;
+			background: #1c1c1e;
+			box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+			border: 1px solid rgba(255, 255, 255, 0.12);
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
+
+		.photo-0 {
+			right: 0;
+			bottom: 0;
+			--tilt: 6deg;
+			z-index: 3;
+			animation:
+				card-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s both,
+				float 7s ease-in-out 1.5s infinite;
+		}
+
+		.photo-1 {
+			right: 36%;
+			bottom: 14%;
+			--tilt: -7deg;
+			z-index: 2;
+			animation:
+				card-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.65s both,
+				float 8s ease-in-out 1.7s infinite;
+		}
+
+		.photo-2 {
+			right: 16%;
+			bottom: 44%;
+			width: 40%;
+			--tilt: 3deg;
+			z-index: 1;
+			opacity: 0.85;
+			animation:
+				card-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.8s both,
+				float 9s ease-in-out 1.9s infinite;
+		}
+
+		// a lone placeholder sits centred rather than in the fan
+		&.count-1 .photo-0 {
+			right: 24%;
+			bottom: 10%;
+		}
+	}
+
+	/* ---------- form side ---------- */
+	.login-side {
+		flex: 0 0 min(480px, 40vw);
+		align-items: center;
+		justify-content: center;
+		padding: 32px;
+		background: #f6f5f3;
+		border-radius: 32px 0 0 32px;
+		animation: slide-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+	}
+
+	.admin-login-card {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		width: 100%;
+		max-width: 360px;
+
+		h2 {
+			margin-bottom: 8px;
+			font-size: 34px;
+			font-weight: 800;
+			letter-spacing: -0.03em;
+		}
+
+		> * {
+			animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+		}
+
+		@for $i from 1 through 5 {
+			> *:nth-child(#{$i}) {
+				animation-delay: #{0.25 + $i * 0.07}s;
+			}
+		}
+
+		.MuiOutlinedInput-root {
+			background: #ffffff;
+			border-radius: 14px;
+		}
+
+		.submit-btn {
+			height: 54px;
+			margin-top: 6px;
+			border-radius: 14px;
+			font-size: 15px;
+
+			.MuiButton-endIcon {
+				transition: transform 0.2s;
+			}
+
+			&:hover .MuiButton-endIcon {
+				transform: translateX(4px);
+			}
+		}
+
+		&.shake {
+			animation: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+		}
+	}
+
+	.admin-login-brand {
+		flex-direction: row;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 20px;
+
+		img {
+			height: 26px;
+		}
+
+		span {
+			padding: 3px 9px;
+			border-radius: 999px;
+			background: #111111;
+			color: #ffffff;
+			font-size: 11px;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+		}
+	}
+}
+
+/* phones: welcome panel on top, the form as a sheet underneath */
+@media (max-width: 768px) {
+	#pc-wrap.admin-auth-wrap {
+		.admin-login {
+			flex-direction: column;
+		}
+
+		.login-hero {
+			flex: 0 0 auto;
+			min-height: 46vh;
+			padding: 24px 20px 72px;
+		}
+
+		.hero-copy {
+			margin-top: 36px;
+			gap: 12px;
+
+			h1 {
+				font-size: 56px;
+			}
+
+			.rotator {
+				font-size: 18px;
+			}
+		}
+
+		.photo-stack {
+			right: -6%;
+			bottom: -4%;
+			width: 52%;
+			opacity: 0.55;
+		}
+
+		.orb {
+			&.orb-a {
+				width: 320px;
+				height: 320px;
+			}
+
+			&.orb-b {
+				width: 280px;
+				height: 280px;
+			}
+		}
+
+		.login-side {
+			flex: 1;
+			margin-top: -40px;
+			padding: 32px 20px 40px;
+			border-radius: 28px 28px 0 0;
+			justify-content: flex-start;
+			animation-name: rise;
+		}
+	}
+}
+
+// motion-sensitive visitors get the same page, standing still
+@media (prefers-reduced-motion: reduce) {
+	#pc-wrap.admin-auth-wrap * {
+		animation: none !important;
+	}
+}
+
+@keyframes rise {
+	from {
+		opacity: 0;
+		transform: translateY(28px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes slide-in {
+	from {
+		opacity: 0;
+		transform: translateX(40px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes word-flip {
+	from {
+		opacity: 0;
+		transform: translateY(100%);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes shimmer {
+	from {
+		background-position: 0% 50%;
+	}
+	to {
+		background-position: 100% 50%;
+	}
+}
+
+@keyframes card-in {
+	from {
+		opacity: 0;
+		transform: translateY(60px) rotate(0deg) scale(0.9);
+	}
+	to {
+		opacity: 1;
+		transform: rotate(var(--tilt));
+	}
+}
+
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0) rotate(var(--tilt));
+	}
+	50% {
+		transform: translateY(-14px) rotate(var(--tilt));
+	}
+}
+
+@keyframes orb-drift-a {
+	to {
+		transform: translate(120px, 90px) scale(1.15);
+	}
+}
+
+@keyframes orb-drift-b {
+	to {
+		transform: translate(-140px, -80px) scale(0.9);
+	}
+}
+
+@keyframes orb-drift-c {
+	to {
+		transform: translate(-90px, 60px) scale(1.2);
+	}
+}
+
+@keyframes pulse-dot {
+	0%,
+	100% {
+		box-shadow: 0 0 0 0 rgba(61, 220, 132, 0.6);
+	}
+	50% {
+		box-shadow: 0 0 0 6px rgba(61, 220, 132, 0);
+	}
+}
+
+@keyframes shake {
+	10%,
+	90% {
+		transform: translateX(-2px);
+	}
+	20%,
+	80% {
+		transform: translateX(4px);
+	}
+	30%,
+	50%,
+	70% {
+		transform: translateX(-8px);
+	}
+	40%,
+	60% {
+		transform: translateX(8px);
+	}
+}
