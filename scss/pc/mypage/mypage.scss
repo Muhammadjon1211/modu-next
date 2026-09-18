@@ -351,6 +351,11 @@
 		}
 
 		/* ---------------- seller products ---------------- */
+		// same breathing room the addresses and payments tabs get from their gap
+		.my-products .my-title-row {
+			margin-bottom: 20px;
+		}
+
 		.my-toolbar {
 			flex-direction: row;
 			align-items: center;
