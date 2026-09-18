@@ -95,8 +95,10 @@
 				font-size: 11px;
 			}
 
-			&:hover {
-				border-color: #111111;
+			@media (hover: hover) {
+				&:hover {
+					border-color: #111111;
+				}
 			}
 
 			&.active {
@@ -215,8 +217,10 @@
 			font-weight: 700;
 			background: #ffffff;
 
-			&:hover {
-				border-color: #111111;
+			@media (hover: hover) {
+				&:hover {
+					border-color: #111111;
+				}
 			}
 
 			&.active {
@@ -264,12 +268,21 @@
 				}
 			}
 
-			&.active,
-			&:hover {
+			&.active {
 				box-shadow:
 					inset 0 0 0 1px rgba(0, 0, 0, 0.1),
 					0 0 0 2px #ffffff,
 					0 0 0 3.5px #111111;
+			}
+
+			// touch screens keep :hover after a tap, which would look like a picked filter
+			@media (hover: hover) {
+				&:hover {
+					box-shadow:
+						inset 0 0 0 1px rgba(0, 0, 0, 0.1),
+						0 0 0 2px #ffffff,
+						0 0 0 3.5px #111111;
+				}
 			}
 		}
 	}
