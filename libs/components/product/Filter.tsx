@@ -1,10 +1,9 @@
-import React, { MouseEvent, ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Button, Checkbox, FormControlLabel, Popover, Slider, Stack, Tooltip } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, Slider, Stack, Tooltip } from '@mui/material';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
-import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { ProductCategory, ProductColor, ProductGender, ProductGroup, ProductSize } from '../../enums/product.enum';
 import {
@@ -25,23 +24,16 @@ interface FilterType {
 	initialInput: ProductsInquiry;
 }
 
-type Panel = 'category' | 'gender' | 'size' | 'color' | 'price' | 'rating' | 'more';
-
 const toggle = <E,>(list: E[] | undefined, value: E): E[] | undefined => {
 	const next = list?.includes(value) ? list.filter((ele) => ele !== value) : [...(list ?? []), value];
 	return next.length ? next : undefined;
 };
 
-/**
- * One horizontal row of filters that stays under the header. It only ever scrolls sideways;
- * each button opens its options in a popover, so the row itself never grows taller.
- */
 const Filter = (props: FilterType) => {
 	const { searchFilter, initialInput } = props;
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const search = searchFilter.search;
-	const [anchor, setAnchor] = useState<{ el: HTMLElement; panel: Panel } | null>(null);
 	const [price, setPrice] = useState<number[]>([
 		search?.pricesRange?.start ?? 0,
 		search?.pricesRange?.end ?? PRICE_MAX,
@@ -60,8 +52,6 @@ const Filter = (props: FilterType) => {
 			scroll: false,
 		});
 	};
-
-	const openHandler = (e: MouseEvent<HTMLElement>, panel: Panel) => setAnchor({ el: e.currentTarget, panel });
 
 	const groupHandler = (group?: ProductGroup) => {
 		const categoryList = search.categoryList?.filter((ele) => categoriesOf(group).includes(ele));
@@ -102,102 +92,104 @@ const Filter = (props: FilterType) => {
 	};
 
 	const resetHandler = async () => {
-		setAnchor(null);
 		await router.push(
-			`/product?input=${JSON.stringify({ ...initialInput, search: { text: search.text } })}`,
-			`/product?input=${JSON.stringify({ ...initialInput, search: { text: search.text } })}`,
+			`/product?input=${JSON.stringify(initialInput)}`,
+			`/product?input=${JSON.stringify(initialInput)}`,
 			{ scroll: false },
 		);
 	};
 
-	const moreCount = (search.options?.length ?? 0) + (search.inStockOnly ? 1 : 0);
-	const counts: Record<Panel, number> = {
-		category: search.categoryList?.length ?? 0,
-		gender: search.genderList?.length ?? 0,
-		size: search.sizeList?.length ?? 0,
-		color: search.colorList?.length ?? 0,
-		price: search.pricesRange ? 1 : 0,
-		rating: search.ratingFrom ? 1 : 0,
-		more: moreCount,
-	};
-	const anyActive = !!search.group || Object.values(counts).some((ele) => ele > 0);
+	return (
+		<Stack className={'filter-config'}>
+			<Stack className={'filter-head'}>
+				<h3>{t('Filters')}</h3>
+				<Button size={'small'} onClick={resetHandler}>
+					{t('Reset')}
+				</Button>
+			</Stack>
 
-	const chip = (panel: Panel, label: string) => (
-		<button
-			key={panel}
-			className={`filter-chip ${counts[panel] ? 'active' : ''} ${anchor?.panel === panel ? 'open' : ''}`}
-			onClick={(e) => openHandler(e, panel)}
-		>
-			{t(label)}
-			{counts[panel] > 0 && panel !== 'price' && panel !== 'rating' && <em>{counts[panel]}</em>}
-			{panel === 'price' && search.pricesRange && <em>{formatPrice(search.pricesRange.start)}+</em>}
-			{panel === 'rating' && search.ratingFrom && <em>{search.ratingFrom}+</em>}
-			<KeyboardArrowDownRoundedIcon />
-		</button>
-	);
-
-	const panels: Record<Panel, ReactNode> = {
-		category: (
-			<Stack className={'category-list'}>
-				{categoriesOf(search.group).map((category) => (
-					<FormControlLabel
-						key={category}
-						control={
-							<Checkbox
-								size={'small'}
-								checked={!!search.categoryList?.includes(category)}
-								onChange={() => categoryHandler(category)}
-							/>
-						}
-						label={t(categoryLabels[category])}
-					/>
-				))}
-			</Stack>
-		),
-		gender: (
-			<Stack className={'chip-list'}>
-				{Object.values(ProductGender).map((gender) => (
-					<button
-						key={gender}
-						className={`chip ${search.genderList?.includes(gender) ? 'active' : ''}`}
-						onClick={() => genderHandler(gender)}
-					>
-						{t(genderLabels[gender])}
+			<Stack className={'find-your-group'}>
+				<Stack className={'segment'}>
+					<button className={!search.group ? 'active' : ''} onClick={() => groupHandler(undefined)}>
+						{t('All')}
 					</button>
-				))}
-			</Stack>
-		),
-		size: (
-			<Stack className={'size-list'}>
-				{productSizes.map((size) => (
-					<button
-						key={size}
-						className={`size ${search.sizeList?.includes(size) ? 'active' : ''}`}
-						onClick={() => sizeHandler(size)}
-					>
-						{size}
-					</button>
-				))}
-			</Stack>
-		),
-		color: (
-			<Stack className={'color-list'}>
-				{Object.values(ProductColor).map((color) => (
-					<Tooltip key={color} title={t(color)} placement={'top'}>
-						<button
-							className={`swatch ${search.colorList?.includes(color) ? 'active' : ''} ${color.toLowerCase()}`}
-							style={{ background: colorHex[color] }}
-							onClick={() => colorHandler(color)}
-							aria-label={color}
-						>
-							{search.colorList?.includes(color) && <CheckRoundedIcon />}
+					{Object.values(ProductGroup).map((group) => (
+						<button key={group} className={search.group === group ? 'active' : ''} onClick={() => groupHandler(group)}>
+							{t(groupLabels[group])}
 						</button>
-					</Tooltip>
-				))}
+					))}
+				</Stack>
 			</Stack>
-		),
-		price: (
-			<Stack className={'price-panel'}>
+
+			<Stack className={'filter-block'}>
+				<h4>{t('Category')}</h4>
+				<Stack className={'category-list'}>
+					{categoriesOf(search.group).map((category) => (
+						<FormControlLabel
+							key={category}
+							control={
+								<Checkbox
+									size={'small'}
+									checked={!!search.categoryList?.includes(category)}
+									onChange={() => categoryHandler(category)}
+								/>
+							}
+							label={t(categoryLabels[category])}
+						/>
+					))}
+				</Stack>
+			</Stack>
+
+			<Stack className={'filter-block'}>
+				<h4>{t('Gender')}</h4>
+				<Stack className={'chip-list'}>
+					{Object.values(ProductGender).map((gender) => (
+						<button
+							key={gender}
+							className={`chip ${search.genderList?.includes(gender) ? 'active' : ''}`}
+							onClick={() => genderHandler(gender)}
+						>
+							{t(genderLabels[gender])}
+						</button>
+					))}
+				</Stack>
+			</Stack>
+
+			<Stack className={'filter-block'}>
+				<h4>{t('Size')}</h4>
+				<Stack className={'size-list'}>
+					{productSizes.map((size) => (
+						<button
+							key={size}
+							className={`size ${search.sizeList?.includes(size) ? 'active' : ''}`}
+							onClick={() => sizeHandler(size)}
+						>
+							{size}
+						</button>
+					))}
+				</Stack>
+			</Stack>
+
+			<Stack className={'filter-block'}>
+				<h4>{t('Color')}</h4>
+				<Stack className={'color-list'}>
+					{Object.values(ProductColor).map((color) => (
+						<Tooltip key={color} title={t(color)} placement={'top'}>
+							<button
+								className={`swatch ${search.colorList?.includes(color) ? 'active' : ''} ${color.toLowerCase()}`}
+								style={{ background: colorHex[color] }}
+								onClick={() => colorHandler(color)}
+								aria-label={color}
+							>
+								{search.colorList?.includes(color) && <CheckRoundedIcon />}
+							</button>
+						</Tooltip>
+					))}
+				</Stack>
+			</Stack>
+
+			<Stack className={'filter-block'}>
+				<h4>{t('Price')}</h4>
 				<Slider
 					value={price}
 					min={0}
@@ -215,22 +207,23 @@ const Filter = (props: FilterType) => {
 					</span>
 				</Stack>
 			</Stack>
-		),
-		rating: (
-			<Stack className={'chip-list'}>
-				{[4, 3].map((rating) => (
-					<button
-						key={rating}
-						className={`chip ${search.ratingFrom === rating ? 'active' : ''}`}
-						onClick={() => ratingHandler(rating)}
-					>
-						<StarRoundedIcon /> {rating}+
-					</button>
-				))}
+
+			<Stack className={'filter-block'}>
+				<h4>{t('Rating')}</h4>
+				<Stack className={'chip-list'}>
+					{[4, 3].map((rating) => (
+						<button
+							key={rating}
+							className={`chip ${search.ratingFrom === rating ? 'active' : ''}`}
+							onClick={() => ratingHandler(rating)}
+						>
+							<StarRoundedIcon /> {rating}+
+						</button>
+					))}
+				</Stack>
 			</Stack>
-		),
-		more: (
-			<Stack className={'category-list'}>
+
+			<Stack className={'filter-block'}>
 				{availableOptions.map((option) => (
 					<FormControlLabel
 						key={option}
@@ -249,46 +242,6 @@ const Filter = (props: FilterType) => {
 					label={t('In stock')}
 				/>
 			</Stack>
-		),
-	};
-
-	return (
-		<Stack className={'filter-bar'}>
-			<Stack className={'filter-row'}>
-				<Stack className={'segment'}>
-					<button className={!search.group ? 'active' : ''} onClick={() => groupHandler(undefined)}>
-						{t('All')}
-					</button>
-					{Object.values(ProductGroup).map((group) => (
-						<button key={group} className={search.group === group ? 'active' : ''} onClick={() => groupHandler(group)}>
-							{t(groupLabels[group])}
-						</button>
-					))}
-				</Stack>
-				{chip('category', 'Category')}
-				{chip('gender', 'Gender')}
-				{chip('size', 'Size')}
-				{chip('color', 'Color')}
-				{chip('price', 'Price')}
-				{chip('rating', 'Rating')}
-				{chip('more', 'More')}
-				{anyActive && (
-					<Button size={'small'} className={'reset-btn'} onClick={resetHandler}>
-						{t('Reset')}
-					</Button>
-				)}
-			</Stack>
-			<Popover
-				open={!!anchor}
-				anchorEl={anchor?.el}
-				onClose={() => setAnchor(null)}
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-				transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-				className={'filter-popover'}
-				disableScrollLock
-			>
-				{anchor && <Stack className={`filter-panel ${anchor.panel}`}>{panels[anchor.panel]}</Stack>}
-			</Popover>
 		</Stack>
 	);
 };

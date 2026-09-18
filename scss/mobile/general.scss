@@ -272,6 +272,16 @@
 		}
 	}
 
+	/* ---------------- product list ---------------- */
+	#product-list-page {
+		padding: 16px;
+
+		.filter-open-btn {
+			margin-bottom: 16px;
+			width: fit-content;
+		}
+	}
+
 	/* ---------------- product detail ---------------- */
 	#product-detail-page {
 		.product-gallery {
