@@ -337,6 +337,8 @@ export const GET_MY_CART = gql`
 				itemQuantity
 				itemPrice
 				itemDiscount
+				itemSize
+				itemColor
 				productId
 				sellerId
 				orderId
@@ -351,6 +353,8 @@ export const GET_MY_CART = gql`
 				productDiscount
 				productStock
 				productImages
+				productSizes
+				productColors
 			}
 		}
 	}
@@ -369,11 +373,27 @@ export const GET_MY_ORDERS = gql`
 				purchasedAt
 				createdAt
 				updatedAt
+				orderShipping {
+					recipientName
+					recipientPhone
+					addressLine1
+					addressLine2
+					city
+					postalCode
+				}
+				orderPayment {
+					paymentType
+					holderName
+					provider
+					last4
+				}
 				orderItems {
 					_id
 					itemQuantity
 					itemPrice
 					itemDiscount
+					itemSize
+					itemColor
 					productId
 					sellerId
 					orderId
@@ -405,11 +425,21 @@ export const GET_SELLER_ORDERS = gql`
 				purchasedAt
 				createdAt
 				updatedAt
+				orderShipping {
+					recipientName
+					recipientPhone
+					addressLine1
+					addressLine2
+					city
+					postalCode
+				}
 				orderItems {
 					_id
 					itemQuantity
 					itemPrice
 					itemDiscount
+					itemSize
+					itemColor
 					productId
 					sellerId
 					orderId
@@ -674,6 +704,40 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 			metaCounter {
 				total
 			}
+		}
+	}
+`;
+
+/**************************
+ *   ADDRESS & PAYMENT    *
+ *************************/
+
+export const GET_MY_ADDRESSES = gql`
+	query GetMyAddresses {
+		getMyAddresses {
+			_id
+			recipientName
+			recipientPhone
+			addressLine1
+			addressLine2
+			city
+			postalCode
+			isDefault
+		}
+	}
+`;
+
+export const GET_MY_PAYMENT_METHODS = gql`
+	query GetMyPaymentMethods {
+		getMyPaymentMethods {
+			_id
+			paymentType
+			holderName
+			provider
+			last4
+			expMonth
+			expYear
+			isDefault
 		}
 	}
 `;

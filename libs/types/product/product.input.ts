@@ -69,6 +69,7 @@ export interface SellerProductsInquiry {
 }
 
 interface ALPISearch {
+	memberId?: string;
 	productStatus?: ProductStatus;
 	categoryList?: ProductCategory[];
 	text?: string;

@@ -26,7 +26,7 @@
 
 			.member-row {
 				flex-direction: row;
-				align-items: flex-end;
+				align-items: flex-start;
 				gap: 20px;
 				padding: 0 32px;
 				margin-top: -48px;
@@ -41,7 +41,8 @@
 				.member-name {
 					flex: 1;
 					min-width: 0;
-					padding-bottom: 8px;
+					// the avatar overlaps the banner by 48px; the name starts below it
+					padding-top: 56px;
 
 					h1 {
 						display: flex;
@@ -67,7 +68,7 @@
 					flex-direction: row;
 					align-items: center;
 					gap: 8px;
-					padding-bottom: 10px;
+					padding-top: 60px;
 
 					.like-btn {
 						width: 44px;

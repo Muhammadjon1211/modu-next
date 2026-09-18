@@ -70,6 +70,12 @@
 					font-weight: 700;
 				}
 
+				.variant {
+					font-size: 13px;
+					color: #555555;
+					font-weight: 600;
+				}
+
 				.unit-price {
 					flex-direction: row;
 					gap: 8px;
@@ -135,6 +141,16 @@
 
 			.MuiButton-root {
 				margin-top: 6px;
+			}
+
+			.summary-warn {
+				font-size: 13px;
+				font-weight: 700;
+				color: #ff4d2e;
+			}
+
+			.disabled-link {
+				pointer-events: none;
 			}
 		}
 	}

@@ -90,7 +90,7 @@ const OrderList = (props: OrderListType) => {
 							return (
 								<TableRow key={ele._id} hover>
 									<TableCell className={'mono'}>#{ele._id.slice(-8).toUpperCase()}</TableCell>
-									<TableCell className={'mono'}>{ele.memberId.slice(-8)}</TableCell>
+									<TableCell>{ele.memberData?.memberNick ?? ele.memberId.slice(-8)}</TableCell>
 									<TableCell>
 										<Stack className={'cell-product'}>
 											<img src={getImageUrl(first?.productImages?.[0])} alt={''} onError={imageFallbackHandler()} />

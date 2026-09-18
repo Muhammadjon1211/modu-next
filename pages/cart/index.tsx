@@ -9,16 +9,14 @@ import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import CartItem from '../../libs/components/cart/CartItem';
+import CartItem, { cartLineProblem } from '../../libs/components/cart/CartItem';
 import { Order, OrderItem } from '../../libs/types/order/order';
 import { GET_MY_CART } from '../../apollo/user/query';
-import { ADD_TO_CART, CREATE_ORDER, REMOVE_FROM_CART } from '../../apollo/user/mutation';
+import { REMOVE_FROM_CART, UPDATE_CART_ITEM } from '../../apollo/user/mutation';
 import { cartCountVar } from '../../apollo/store';
 import { getJwtToken } from '../../libs/auth';
-import { ProductStatus } from '../../libs/enums/product.enum';
-import { Message } from '../../libs/enums/common.enum';
 import { formatPrice } from '../../libs/utils';
-import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSuccessAlert } from '../../libs/sweetAlert';
+import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { T } from '../../libs/types/common';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -36,9 +34,8 @@ const Cart: NextPage = () => {
 	const [authed, setAuthed] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
-	const [addToCart] = useMutation(ADD_TO_CART);
+	const [updateCartItem] = useMutation(UPDATE_CART_ITEM);
 	const [removeFromCart] = useMutation(REMOVE_FROM_CART);
-	const [createOrder] = useMutation(CREATE_ORDER);
 
 	const { loading, refetch } = useQuery(GET_MY_CART, {
 		fetchPolicy: 'network-only',
@@ -67,20 +64,11 @@ const Cart: NextPage = () => {
 		try {
 			if (quantity < 1) return;
 			setBusy(true);
-			if (quantity > item.itemQuantity) {
-				await addToCart({
-					variables: { input: { productId: item.productId, itemQuantity: quantity - item.itemQuantity } },
-				});
-			} else {
-				// the cart only adds up, so a decrease is a remove followed by a re-add
-				await removeFromCart({ variables: { input: item.productId } });
-				await addToCart({ variables: { input: { productId: item.productId, itemQuantity: quantity } } });
-			}
+			await updateCartItem({ variables: { input: { orderItemId: item._id, itemQuantity: quantity } } });
 			await reloadCartHandler();
 		} catch (err: any) {
 			console.log('ERROR, changeQuantityHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
-			await reloadCartHandler();
 		} finally {
 			setBusy(false);
 		}
@@ -89,7 +77,7 @@ const Cart: NextPage = () => {
 	const removeItemHandler = async (item: OrderItem) => {
 		try {
 			setBusy(true);
-			await removeFromCart({ variables: { input: item.productId } });
+			await removeFromCart({ variables: { input: item._id } });
 			await reloadCartHandler();
 		} catch (err: any) {
 			console.log('ERROR, removeItemHandler:', err.message);
@@ -99,37 +87,9 @@ const Cart: NextPage = () => {
 		}
 	};
 
-	const checkoutHandler = async () => {
-		try {
-			const items = cart?.orderItems ?? [];
-			if (!items.length) throw new Error(Message.EMPTY_CART);
-			if (hasUnavailable) throw new Error(t('Remove sold out items first'));
-			if (!(await sweetConfirmAlert(`${t('Place order')} · ${formatPrice(cart?.orderTotal)}`))) return;
-
-			setBusy(true);
-			await createOrder({
-				variables: {
-					input: items.map((ele) => ({ productId: ele.productId, itemQuantity: ele.itemQuantity })),
-				},
-			});
-			cartCountVar(0);
-			await sweetTopSuccessAlert(t('Order placed'), 1500);
-			await router.push({ pathname: '/mypage', query: { category: 'myOrders' } });
-		} catch (err: any) {
-			console.log('ERROR, checkoutHandler:', err.message);
-			sweetMixinErrorAlert(err.message).then();
-			await reloadCartHandler();
-		} finally {
-			setBusy(false);
-		}
-	};
-
 	const items = cart?.orderItems ?? [];
 	const productOf = (id: string) => cart?.productData?.find((ele) => ele._id === id);
-	const hasUnavailable = items.some((item) => {
-		const product = productOf(item.productId);
-		return !product || product.productStatus !== ProductStatus.ACTIVE || product.productStock <= 0;
-	});
+	const hasProblem = items.some((item) => !!cartLineProblem(item, productOf(item.productId)));
 	const itemCount = items.reduce((sum, ele) => sum + ele.itemQuantity, 0);
 
 	if (!cart) {
@@ -173,15 +133,12 @@ const Cart: NextPage = () => {
 				<span>{t('Total')}</span>
 				<strong>{formatPrice(cart.orderTotal)}</strong>
 			</Stack>
-			<Button
-				variant={'contained'}
-				size={'large'}
-				fullWidth
-				disabled={busy || hasUnavailable}
-				onClick={checkoutHandler}
-			>
-				{t('Checkout')}
-			</Button>
+			{hasProblem && <span className={'summary-warn'}>{t('Fix the marked items first')}</span>}
+			<Link href={'/checkout'} className={busy || hasProblem ? 'disabled-link' : ''}>
+				<Button variant={'contained'} size={'large'} fullWidth disabled={busy || hasProblem}>
+					{t('Checkout')}
+				</Button>
+			</Link>
 		</Stack>
 	);
 

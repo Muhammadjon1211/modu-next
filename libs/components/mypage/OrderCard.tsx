@@ -5,7 +5,7 @@ import { Button, Stack } from '@mui/material';
 import { Order, OrderItem } from '../../types/order/order';
 import { Product } from '../../types/product/product';
 import { OrderStatus } from '../../enums/order.enum';
-import { formatDate, formatPrice, getImageUrl, imageFallbackHandler, salePrice } from '../../utils';
+import { formatDate, formatPrice, getImageUrl, imageFallbackHandler, paymentLabel, salePrice } from '../../utils';
 
 export const orderStatusLabels: Record<OrderStatus, string> = {
 	[OrderStatus.PAUSE]: 'In cart',
@@ -56,6 +56,11 @@ const OrderCard = (props: OrderCardType) => {
 								<Link href={href} className={'title'}>
 									{product?.productTitle ?? t('Removed product')}
 								</Link>
+								{(item.itemSize || item.itemColor) && (
+									<span className={'variant'}>
+										{[item.itemSize, item.itemColor ? t(item.itemColor) : ''].filter((x) => x).join(' · ')}
+									</span>
+								)}
 								<span className={'qty'}>
 									{formatPrice(salePrice(item.itemPrice, item.itemDiscount))} × {item.itemQuantity}
 								</span>
@@ -74,6 +79,33 @@ const OrderCard = (props: OrderCardType) => {
 					);
 				})}
 			</Stack>
+			{order.orderShipping && (
+				<Stack className={'order-delivery'}>
+					<Stack>
+						<span className={'label'}>{t('Ship to')}</span>
+						<strong>
+							{order.orderShipping.recipientName} · {order.orderShipping.recipientPhone}
+						</strong>
+						<span>
+							{[
+								order.orderShipping.addressLine1,
+								order.orderShipping.addressLine2,
+								order.orderShipping.city,
+								order.orderShipping.postalCode,
+							]
+								.filter((x) => x)
+								.join(', ')}
+						</span>
+					</Stack>
+					{!sellerId && order.orderPayment && (
+						<Stack>
+							<span className={'label'}>{t('Paid with')}</span>
+							<strong>{paymentLabel(order.orderPayment)}</strong>
+							<span>{order.orderPayment.holderName}</span>
+						</Stack>
+					)}
+				</Stack>
+			)}
 			<Stack className={'order-foot'}>
 				<Stack className={'order-total'}>
 					<span>{t('Total')}</span>

@@ -3,7 +3,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
-import { AppBar, Avatar, Box, Button, Drawer, Stack, Toolbar } from '@mui/material';
+import { AppBar, Avatar, Box, Button, Drawer, IconButton, Stack, Toolbar } from '@mui/material';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { userVar } from '../../../apollo/store';
 import { getJwtToken, logOut, updateUserInfo } from '../../auth';
 import { getMemberImage } from '../../utils';
@@ -17,6 +19,10 @@ const withAdminLayout = (Component: any) => {
 		const router = useRouter();
 		const user = useReactiveVar(userVar);
 		const [loading, setLoading] = useState<boolean>(true);
+		const [menuOpen, setMenuOpen] = useState<boolean>(false);
+		const device = useDeviceDetect();
+		// on a phone the menu slides in instead of taking 280px of a 390px screen
+		const mobile = device === 'mobile';
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -31,6 +37,10 @@ const withAdminLayout = (Component: any) => {
 			}
 		}, [loading, user, router]);
 
+		useEffect(() => {
+			setMenuOpen(false);
+		}, [router.asPath]);
+
 		/** HANDLERS **/
 
 		if (!user || user?.memberType !== MemberType.ADMIN) return null;
@@ -39,15 +49,23 @@ const withAdminLayout = (Component: any) => {
 			<>
 				<Head>
 					<title>Modu Admin</title>
+					<meta name={'viewport'} content={'width=device-width, initial-scale=1'} />
+					<meta name={'robots'} content={'noindex,nofollow'} />
 				</Head>
 				<Stack id="pc-wrap" className={'admin-wrap'}>
 					<AppBar
 						position="fixed"
 						className={'admin-appbar'}
-						sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+						sx={mobile ? { width: '100%' } : { width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
 					>
 						<Toolbar className={'admin-topbar'}>
-							<Box />
+							{mobile ? (
+								<IconButton onClick={() => setMenuOpen(true)} aria-label={'menu'}>
+									<MenuRoundedIcon />
+								</IconButton>
+							) : (
+								<Box />
+							)}
 							<Stack className={'admin-user'}>
 								<Avatar src={getMemberImage(user.memberImage)} />
 								<strong>{user.memberNick}</strong>
@@ -64,7 +82,9 @@ const withAdminLayout = (Component: any) => {
 							flexShrink: 0,
 							'& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' },
 						}}
-						variant="permanent"
+						variant={mobile ? 'temporary' : 'permanent'}
+						open={mobile ? menuOpen : true}
+						onClose={() => setMenuOpen(false)}
 						anchor="left"
 						className={'admin-drawer'}
 					>
@@ -75,7 +95,7 @@ const withAdminLayout = (Component: any) => {
 						<AdminMenuList />
 					</Drawer>
 
-					<Box component={'main'} className={'admin-main'} sx={{ ml: `${drawerWidth}px` }}>
+					<Box component={'main'} className={'admin-main'} sx={{ ml: mobile ? 0 : `${drawerWidth}px` }}>
 						<Component {...props} />
 					</Box>
 				</Stack>

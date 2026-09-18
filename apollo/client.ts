@@ -31,6 +31,8 @@ function createIsomorphicLink() {
 
 		const uploadLink = createUploadLink({
 			uri: process.env.REACT_APP_API_GRAPHQL_URL,
+			// Apollo Server blocks multipart requests without this header (CSRF prevention), so every upload failed
+			headers: { 'apollo-require-preflight': 'true' },
 		});
 
 		/* lazy: the socket only opens once a subscription is actually started */

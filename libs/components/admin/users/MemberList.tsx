@@ -83,9 +83,14 @@ const MemberList = (props: MemberListType) => {
 						rows.map((member) => (
 							<TableRow key={member._id} hover>
 								<TableCell>
+									{/* a seller opens its store in admin; anyone else opens the public profile */}
 									<Link
-										href={{ pathname: '/member', query: { memberId: member._id } }}
-										target={'_blank'}
+										href={
+											member.memberType === MemberType.SELLER
+												? { pathname: '/_admin/stores/detail', query: { id: member._id } }
+												: { pathname: '/member', query: { memberId: member._id } }
+										}
+										target={member.memberType === MemberType.SELLER ? undefined : '_blank'}
 										rel={'noreferrer'}
 										className={'cell-member'}
 									>

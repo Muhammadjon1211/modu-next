@@ -11,6 +11,7 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
@@ -22,7 +23,7 @@ import { GET_PRODUCT } from '../../apollo/user/query';
 import { ADD_TO_CART, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { cartCountVar, userVar } from '../../apollo/store';
 import { CommentGroup } from '../../libs/enums/comment.enum';
-import { ProductStatus } from '../../libs/enums/product.enum';
+import { ProductColor, ProductSize, ProductStatus } from '../../libs/enums/product.enum';
 import { MemberType } from '../../libs/enums/member.enum';
 import { Message } from '../../libs/enums/common.enum';
 import {
@@ -52,6 +53,8 @@ const ProductDetail: NextPage = () => {
 	const [productId, setProductId] = useState<string>('');
 	const [product, setProduct] = useState<Product | null>(null);
 	const [quantity, setQuantity] = useState<number>(1);
+	const [size, setSize] = useState<ProductSize | ''>('');
+	const [color, setColor] = useState<ProductColor | ''>('');
 	const [tab, setTab] = useState<string>('details');
 	const [adding, setAdding] = useState<boolean>(false);
 
@@ -65,7 +68,12 @@ const ProductDetail: NextPage = () => {
 		skip: !productId,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			if (data?.getProduct) setProduct(data.getProduct);
+			const found: Product | undefined = data?.getProduct;
+			if (!found) return;
+			setProduct(found);
+			// a single option is picked for the buyer; several make them choose
+			if (found.productSizes?.length === 1) setSize(found.productSizes[0]);
+			if (found.productColors?.length === 1) setColor(found.productColors[0]);
 		},
 	});
 
@@ -74,6 +82,8 @@ const ProductDetail: NextPage = () => {
 		if (router.query.id) {
 			setProductId(router.query.id as string);
 			setQuantity(1);
+			setSize('');
+			setColor('');
 		}
 	}, [router]);
 
@@ -91,11 +101,20 @@ const ProductDetail: NextPage = () => {
 				if (await sweetLoginConfirmAlert(t('Please login first!'))) await router.push('/account/join');
 				return;
 			}
+			if (product.productSizes?.length && !size) throw new Error(t('Please choose a size!'));
+			if (product.productColors?.length && !color) throw new Error(t('Please choose a color!'));
 			if (product.productStock < quantity) throw new Error(Message.NOT_ENOUGH_STOCK);
 
 			setAdding(true);
 			const { data } = await addToCart({
-				variables: { input: { productId: product._id, itemQuantity: quantity } },
+				variables: {
+					input: {
+						productId: product._id,
+						itemQuantity: quantity,
+						...(size ? { itemSize: size } : {}),
+						...(color ? { itemColor: color } : {}),
+					},
+				},
 			});
 			cartCountVar(data?.addToCart?.orderItems?.length ?? 0);
 
@@ -161,25 +180,38 @@ const ProductDetail: NextPage = () => {
 			<Stack className={'option-row'}>
 				<span className={'option-label'}>{t('Size')}</span>
 				<Stack className={'size-list'}>
-					{product.productSizes.map((size) => (
-						<span key={size} className={'size'}>
-							{size}
-						</span>
+					{product.productSizes.map((ele) => (
+						<button
+							key={ele}
+							type={'button'}
+							className={`size ${size === ele ? 'active' : ''}`}
+							disabled={soldOut}
+							onClick={() => setSize(ele)}
+						>
+							{ele}
+						</button>
 					))}
 				</Stack>
 			</Stack>
 			<Stack className={'option-row'}>
 				<span className={'option-label'}>{t('Color')}</span>
 				<Stack className={'color-list'}>
-					{product.productColors.map((color) => (
-						<span
-							key={color}
-							className={`swatch ${color.toLowerCase()}`}
-							style={{ background: colorHex[color] }}
-							title={t(color)}
-						/>
+					{product.productColors.map((ele) => (
+						<button
+							key={ele}
+							type={'button'}
+							className={`swatch ${ele.toLowerCase()} ${color === ele ? 'active' : ''}`}
+							style={{ background: colorHex[ele] }}
+							title={t(ele)}
+							aria-label={ele}
+							disabled={soldOut}
+							onClick={() => setColor(ele)}
+						>
+							{color === ele && <CheckRoundedIcon />}
+						</button>
 					))}
 				</Stack>
+				{color && <span className={'option-value'}>{t(color)}</span>}
 			</Stack>
 
 			{!soldOut && !isOwner && (

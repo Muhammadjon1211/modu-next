@@ -125,7 +125,7 @@ export const ADD_TO_CART = gql`
 
 export const REMOVE_FROM_CART = gql`
 	mutation RemoveFromCart($input: String!) {
-		removeFromCart(productId: $input) {
+		removeFromCart(orderItemId: $input) {
 			_id
 			orderTotal
 			orderItems {
@@ -137,8 +137,21 @@ export const REMOVE_FROM_CART = gql`
 	}
 `;
 
+export const UPDATE_CART_ITEM = gql`
+	mutation UpdateCartItem($input: CartItemUpdate!) {
+		updateCartItem(input: $input) {
+			_id
+			orderTotal
+			orderItems {
+				_id
+				itemQuantity
+			}
+		}
+	}
+`;
+
 export const CREATE_ORDER = gql`
-	mutation CreateOrder($input: [OrderItemInput!]!) {
+	mutation CreateOrder($input: OrderInput!) {
 		createOrder(input: $input) {
 			_id
 			orderStatus
@@ -265,6 +278,64 @@ export const UNSUBSCRIBE = gql`
 			_id
 			followingId
 			followerId
+		}
+	}
+`;
+
+/**************************
+ *   ADDRESS & PAYMENT    *
+ *************************/
+
+export const CREATE_ADDRESS = gql`
+	mutation CreateAddress($input: AddressInput!) {
+		createAddress(input: $input) {
+			_id
+			isDefault
+		}
+	}
+`;
+
+export const UPDATE_ADDRESS = gql`
+	mutation UpdateAddress($input: AddressUpdate!) {
+		updateAddress(input: $input) {
+			_id
+			isDefault
+		}
+	}
+`;
+
+export const REMOVE_ADDRESS = gql`
+	mutation RemoveAddress($input: String!) {
+		removeAddress(addressId: $input) {
+			_id
+		}
+	}
+`;
+
+export const CREATE_PAYMENT_METHOD = gql`
+	mutation CreatePaymentMethod($input: PaymentInput!) {
+		createPaymentMethod(input: $input) {
+			_id
+			provider
+			last4
+			isDefault
+		}
+	}
+`;
+
+export const UPDATE_PAYMENT_METHOD = gql`
+	mutation UpdatePaymentMethod($input: PaymentMethodUpdate!) {
+		updatePaymentMethod(input: $input) {
+			_id
+			isDefault
+		}
+	}
+`;
+
+export const REMOVE_PAYMENT_METHOD = gql`
+	mutation RemovePaymentMethod($input: String!) {
+		removePaymentMethod(paymentId: $input) {
+			_id
 		}
 	}
 `;

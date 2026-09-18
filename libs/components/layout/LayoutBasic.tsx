@@ -30,6 +30,9 @@ const withLayoutBasic = (Component: any) => {
 				case '/cart':
 					title = 'Cart';
 					break;
+				case '/checkout':
+					title = 'Checkout';
+					break;
 				case '/mypage':
 					title = 'My page';
 					break;

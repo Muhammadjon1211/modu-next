@@ -76,15 +76,38 @@
 					color: #555555;
 				}
 
-				.size-list .size {
-					height: 36px;
-					cursor: default;
+				.size-list {
+					gap: 8px;
+
+					.size {
+						height: 40px;
+						min-width: 48px;
+
+						&:disabled {
+							opacity: 0.4;
+							cursor: not-allowed;
+						}
+					}
 				}
 
-				.color-list .swatch {
-					width: 26px;
-					height: 26px;
-					cursor: default;
+				.color-list {
+					gap: 12px;
+
+					.swatch {
+						width: 30px;
+						height: 30px;
+
+						&:disabled {
+							opacity: 0.4;
+							cursor: not-allowed;
+						}
+					}
+				}
+
+				.option-value {
+					font-size: 13px;
+					font-weight: 600;
+					color: #555555;
 				}
 
 				.stock-left {
@@ -257,13 +280,36 @@
 			gap: 14px;
 			min-width: 0;
 
-			.thumbs {
-				width: 76px;
-				gap: 10px;
+			/* the rail takes the main image height; the thumbs scroll inside it */
+			.thumbs-rail {
+				position: relative;
+				width: 80px;
 				flex-shrink: 0;
+			}
+
+			.thumbs {
+				position: absolute;
+				inset: 0;
+				gap: 10px;
+				padding: 4px;
+				overflow-y: auto;
+				overscroll-behavior: contain;
+				scrollbar-width: thin;
+				scrollbar-color: #d0d0d0 transparent;
+
+				&::-webkit-scrollbar {
+					width: 4px;
+				}
+
+				&::-webkit-scrollbar-thumb {
+					background: #d0d0d0;
+					border-radius: 4px;
+				}
 
 				button {
+					flex-shrink: 0;
 					aspect-ratio: 3 / 4;
+					cursor: pointer;
 					border-radius: 10px;
 					overflow: hidden;
 					background: #f3f2ef;
@@ -280,6 +326,10 @@
 						object-fit: cover;
 					}
 
+					&:hover {
+						opacity: 0.85;
+					}
+
 					&.active {
 						opacity: 1;
 						outline-color: #111111;
@@ -290,6 +340,55 @@
 			.main-image {
 				position: relative;
 				flex: 1;
+				outline: none;
+
+				&:focus-visible {
+					box-shadow: 0 0 0 2px #111111;
+				}
+
+				.gallery-arrow {
+					position: absolute;
+					top: 50%;
+					transform: translateY(-50%);
+					width: 44px;
+					height: 44px;
+					background: rgba(255, 255, 255, 0.92);
+					color: #111111;
+					box-shadow: 0 2px 8px rgba(17, 17, 17, 0.12);
+					opacity: 0;
+					transition:
+						opacity 0.15s,
+						background 0.15s;
+
+					&:hover {
+						background: #ffffff;
+					}
+
+					&.prev {
+						left: 16px;
+					}
+
+					&.next {
+						right: 16px;
+					}
+				}
+
+				&:hover .gallery-arrow,
+				&:focus-within .gallery-arrow {
+					opacity: 1;
+				}
+
+				.gallery-count {
+					position: absolute;
+					right: 16px;
+					bottom: 16px;
+					padding: 4px 10px;
+					border-radius: 999px;
+					background: rgba(17, 17, 17, 0.6);
+					color: #ffffff;
+					font-size: 12px;
+					font-weight: 700;
+				}
 				aspect-ratio: 4 / 5;
 				border-radius: 20px;
 				overflow: hidden;

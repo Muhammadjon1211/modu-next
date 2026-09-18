@@ -171,15 +171,24 @@
 			.hero-tile {
 				position: relative;
 				flex: 1;
+				min-width: 0;
 				display: flex;
 				align-items: flex-end;
 				justify-content: space-between;
+				gap: 8px;
 				height: 150px;
-				padding: 16px;
+				padding: 14px;
 				border-radius: 18px;
 				overflow: hidden;
-				font-size: 18px;
+				font-size: 16px;
 				font-weight: 800;
+
+				span {
+					min-width: 0;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
 
 				img {
 					position: absolute;
@@ -196,8 +205,9 @@
 				}
 
 				svg {
-					width: 30px;
-					height: 30px;
+					flex-shrink: 0;
+					width: 28px;
+					height: 28px;
 					padding: 6px;
 					border-radius: 50%;
 					background: #ffffff;
@@ -295,6 +305,43 @@
 					object-fit: cover;
 					scroll-snap-align: start;
 					background: #f3f2ef;
+				}
+			}
+
+			.gallery-count {
+				position: absolute;
+				top: 14px;
+				right: 14px;
+				padding: 4px 10px;
+				border-radius: 999px;
+				background: rgba(17, 17, 17, 0.6);
+				color: #ffffff;
+				font-size: 12px;
+				font-weight: 700;
+			}
+
+			.gallery-dots {
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 12px;
+				flex-direction: row;
+				justify-content: center;
+				gap: 6px;
+
+				button {
+					width: 7px;
+					height: 7px;
+					border-radius: 999px;
+					background: rgba(17, 17, 17, 0.25);
+					transition:
+						width 0.2s,
+						background 0.2s;
+
+					&.active {
+						width: 20px;
+						background: #111111;
+					}
 				}
 			}
 
@@ -447,13 +494,17 @@
 					height: 88px;
 				}
 
-				.member-name h1 {
-					font-size: 22px;
+				.member-name {
+					padding-top: 46px;
+
+					h1 {
+						font-size: 22px;
+					}
 				}
 
 				.member-actions {
 					width: 100%;
-					padding-bottom: 0;
+					padding-top: 0;
 
 					> button:first-child,
 					> a {
@@ -511,9 +562,24 @@
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 		}
 
+		.my-title-row {
+			flex-wrap: wrap;
+			gap: 12px;
+
+			.MuiButton-root {
+				padding: 8px 16px;
+				font-size: 13px;
+			}
+		}
+
 		.order-card {
 			.order-line {
 				flex-wrap: wrap;
+			}
+
+			.order-delivery {
+				grid-template-columns: minmax(0, 1fr);
+				gap: 12px;
 			}
 
 			.line-actions {

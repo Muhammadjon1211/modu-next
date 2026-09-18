@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import CheckroomOutlinedIcon from '@mui/icons-material/CheckroomOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
@@ -12,6 +13,7 @@ import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 const menus = [
 	{ title: 'Dashboard', href: '/_admin', icon: <SpaceDashboardOutlinedIcon /> },
 	{ title: 'Users', href: '/_admin/users', icon: <PeopleAltOutlinedIcon /> },
+	{ title: 'Stores', href: '/_admin/stores', icon: <StorefrontOutlinedIcon /> },
 	{ title: 'Products', href: '/_admin/products', icon: <CheckroomOutlinedIcon /> },
 	{ title: 'Orders', href: '/_admin/orders', icon: <ReceiptLongOutlinedIcon /> },
 	{ title: 'Returns', href: '/_admin/returns', icon: <AssignmentReturnOutlinedIcon /> },

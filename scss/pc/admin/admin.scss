@@ -426,3 +426,235 @@
 		}
 	}
 }
+
+/* ------------------------------------------------------------------ */
+/* stores                                                              */
+/* ------------------------------------------------------------------ */
+#pc-wrap.admin-wrap {
+	.store-detail {
+		gap: 16px;
+
+		.back-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			width: fit-content;
+			font-size: 13px;
+			font-weight: 700;
+			color: #8a8a8a;
+
+			&:hover {
+				color: #111111;
+			}
+		}
+
+		.store-tabs {
+			border-bottom: 1px solid #ececec;
+
+			.MuiTabs-indicator {
+				background: #111111;
+			}
+		}
+	}
+
+	.store-header {
+		border: 1px solid #ececec;
+		border-radius: 20px;
+		overflow: hidden;
+
+		.store-banner {
+			height: 120px;
+			background: #f3f2ef;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			.banner-fill {
+				display: block;
+				width: 100%;
+				height: 100%;
+				background: linear-gradient(120deg, #1d1d1f 0%, #3a3a3c 55%, #ff4d2e 160%);
+			}
+		}
+
+		.store-identity {
+			flex-direction: row;
+			align-items: flex-start;
+			gap: 16px;
+			padding: 0 24px;
+			margin-top: -36px;
+
+			.store-avatar {
+				width: 84px;
+				height: 84px;
+				border: 4px solid #ffffff;
+				background: #f3f2ef;
+			}
+
+			.store-name {
+				flex: 1;
+				min-width: 0;
+				// the avatar overlaps the banner by 36px; text starts below it
+				padding-top: 44px;
+
+				h2 {
+					font-size: 22px;
+					font-weight: 800;
+				}
+
+				span {
+					font-size: 13px;
+					color: #8a8a8a;
+				}
+			}
+
+			.store-actions {
+				flex-direction: row;
+				align-items: center;
+				gap: 10px;
+				padding-top: 46px;
+			}
+		}
+
+		.store-stats {
+			display: grid;
+			grid-template-columns: repeat(6, minmax(0, 1fr));
+			margin-top: 20px;
+			border-top: 1px solid #f0f0f0;
+
+			.store-stat {
+				padding: 16px 24px;
+
+				& + .store-stat {
+					border-left: 1px solid #f0f0f0;
+				}
+
+				strong {
+					font-size: 20px;
+					font-weight: 800;
+				}
+
+				span {
+					font-size: 12px;
+					color: #8a8a8a;
+				}
+
+				&.accent strong {
+					color: #ff4d2e;
+				}
+			}
+		}
+	}
+
+	.store-panel {
+		gap: 8px;
+
+		.sub-tabs {
+			min-height: 40px;
+
+			.MuiTab-root {
+				min-height: 40px;
+				font-size: 13px;
+			}
+
+			.MuiTabs-indicator {
+				background: #111111;
+			}
+		}
+
+		.cell-member .MuiAvatar-root {
+			width: 32px;
+			height: 32px;
+		}
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* admin on a phone                                                    */
+/* ------------------------------------------------------------------ */
+@media (max-width: 768px) {
+	#pc-wrap.admin-wrap {
+		.admin-topbar .admin-user strong {
+			display: none;
+		}
+
+		.admin-main {
+			padding: 76px 12px 32px;
+		}
+
+		.admin-page {
+			padding: 16px;
+			border-radius: 16px;
+
+			.admin-toolbar {
+				flex-direction: column;
+				align-items: stretch;
+
+				.search-field {
+					width: auto;
+				}
+			}
+		}
+
+		.admin-page.plain {
+			padding: 0;
+		}
+
+		.admin-dashboard {
+			.stat-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 10px;
+			}
+
+			.stat-card {
+				padding: 16px;
+
+				strong {
+					font-size: 26px;
+				}
+			}
+
+			.panel-grid {
+				grid-template-columns: minmax(0, 1fr);
+			}
+		}
+
+		.store-header {
+			.store-identity {
+				flex-wrap: wrap;
+				padding: 0 16px;
+
+				.store-name {
+					padding-top: 40px;
+				}
+
+				.store-actions {
+					width: 100%;
+					padding-top: 0;
+				}
+			}
+
+			.store-stats {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+
+				.store-stat {
+					padding: 12px 14px;
+					border-top: 1px solid #f0f0f0;
+					min-width: 0;
+
+					strong {
+						font-size: 18px;
+						white-space: nowrap;
+					}
+
+					& + .store-stat {
+						border-left: 0;
+					}
+				}
+			}
+		}
+	}
+}

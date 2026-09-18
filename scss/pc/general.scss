@@ -247,7 +247,7 @@
 
 		.seller-body {
 			flex-direction: row;
-			align-items: flex-end;
+			align-items: flex-start;
 			gap: 12px;
 			padding: 0 16px;
 			margin-top: -28px;
@@ -262,7 +262,8 @@
 			.seller-name {
 				flex: 1;
 				min-width: 0;
-				padding-bottom: 4px;
+				// the avatar overlaps the banner by 28px; the name starts below it
+				padding-top: 34px;
 
 				a {
 					font-size: 16px;
@@ -279,7 +280,7 @@
 			}
 
 			.like-btn {
-				margin-bottom: 2px;
+				margin-top: 32px;
 				color: #111111;
 
 				&.liked {

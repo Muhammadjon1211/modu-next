@@ -16,6 +16,8 @@ import MyProducts from '../../libs/components/mypage/MyProducts';
 import AddProduct from '../../libs/components/mypage/AddProduct';
 import SellerOrders from '../../libs/components/mypage/SellerOrders';
 import WriteArticle from '../../libs/components/mypage/WriteArticle';
+import MyAddresses from '../../libs/components/mypage/MyAddresses';
+import MyPayments from '../../libs/components/mypage/MyPayments';
 import MemberArticles from '../../libs/components/member/MemberArticles';
 import FollowList from '../../libs/components/member/FollowList';
 import { userVar } from '../../apollo/store';
@@ -61,6 +63,8 @@ const MyPage: NextPage = () => {
 	const body = (
 		<Stack className={'main-config'}>
 			{category === 'myProfile' && <MyProfile />}
+			{category === 'myAddresses' && <MyAddresses />}
+			{category === 'myPayments' && <MyPayments />}
 			{category === 'myOrders' && <MyOrders />}
 			{category === 'myReturns' && <MyReturns />}
 			{category === 'myFavorites' && <MyFavorites />}
@@ -111,6 +115,8 @@ const MyPage: NextPage = () => {
 			{ key: 'followers', label: 'Followers' },
 			{ key: 'followings', label: 'Following' },
 			{ key: 'myProfile', label: 'Profile' },
+			{ key: 'myAddresses', label: 'Addresses' },
+			{ key: 'myPayments', label: 'Payment methods' },
 		];
 		return (
 			<div id="my-page">

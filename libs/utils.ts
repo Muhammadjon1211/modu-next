@@ -23,6 +23,10 @@ export const getImageUrl = (path: string | undefined, fallback: string = '/img/p
 	return `${REACT_APP_API_URL}/${path}`;
 };
 
+/** "VISA •••• 4242" — the only form a payment method is ever shown in */
+export const paymentLabel = (method: { provider: string; last4: string }): string =>
+	`${method.provider} •••• ${method.last4}`;
+
 export const getMemberImage = (path: string | undefined): string => getImageUrl(path, '/img/profile/defaultUser.svg');
 
 /** swaps a broken upload for a local placeholder, once */
