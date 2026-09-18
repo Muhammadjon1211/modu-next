@@ -138,6 +138,26 @@
 		margin-top: 32px;
 	}
 
+	/* ---------------- brand ticker ---------------- */
+	.brand-ticker {
+		margin-top: 20px;
+		padding: 12px 0;
+
+		.ticker-track {
+			animation-duration: 28s;
+		}
+
+		span {
+			gap: 16px;
+			padding-right: 16px;
+			font-size: 26px;
+
+			i {
+				font-size: 14px;
+			}
+		}
+	}
+
 	/* ---------------- home ---------------- */
 	.home-page {
 		.hero-banner {
@@ -145,21 +165,172 @@
 			gap: 12px;
 
 			.hero-main {
-				gap: 18px;
-				padding: 32px 24px;
-				border-radius: 20px;
-				background: #111111;
+				position: relative;
+				gap: 16px;
+				min-height: 380px;
+				padding: 28px 22px;
+				border-radius: 22px;
+				background: #0c0c0d;
 				color: #ffffff;
+				overflow: hidden;
+				isolation: isolate;
+				animation: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 
-				h1 {
-					font-size: 40px;
-					line-height: 1;
-					font-weight: 800;
-					letter-spacing: -0.04em;
+				.orb {
+					position: absolute;
+					z-index: -1;
+					border-radius: 50%;
+					filter: blur(60px);
+
+					&.orb-a {
+						width: 260px;
+						height: 260px;
+						top: -90px;
+						left: -70px;
+						background: #ff4d2e;
+						opacity: 0.5;
+						animation: orb-drift-a 16s ease-in-out infinite alternate;
+					}
+
+					&.orb-b {
+						width: 220px;
+						height: 220px;
+						bottom: -100px;
+						right: -40px;
+						background: #7a5cff;
+						opacity: 0.35;
+						animation: orb-drift-b 19s ease-in-out infinite alternate;
+					}
 				}
 
-				a {
+				.grain {
+					position: absolute;
+					inset: 0;
+					z-index: -1;
+					background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+					background-size: 20px 20px;
+					mask-image: linear-gradient(180deg, #000000 0%, transparent 90%);
+				}
+
+				.hero-kicker {
+					display: inline-flex;
+					align-items: center;
+					gap: 7px;
 					width: fit-content;
+					padding: 6px 12px;
+					border: 1px solid rgba(255, 255, 255, 0.18);
+					border-radius: 999px;
+					background: rgba(255, 255, 255, 0.06);
+					font-size: 11px;
+					font-weight: 700;
+					letter-spacing: 0.06em;
+					text-transform: uppercase;
+					color: #ff8a73;
+					animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s both;
+
+					i {
+						width: 6px;
+						height: 6px;
+						border-radius: 50%;
+						background: #ff4d2e;
+						animation: pulse-dot 2s ease-in-out infinite;
+					}
+				}
+
+				h1 {
+					display: flex;
+					flex-wrap: wrap;
+					gap: 0 0.22em;
+					max-width: 62%;
+					font-size: 44px;
+					line-height: 0.98;
+					font-weight: 800;
+					letter-spacing: -0.04em;
+					position: relative;
+					z-index: 2;
+
+					.word {
+						display: inline-block;
+						animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+						&:last-child {
+							background: linear-gradient(100deg, #ffffff 0%, #ffd2c4 45%, #ff4d2e 100%);
+							background-size: 200% 100%;
+							-webkit-background-clip: text;
+							background-clip: text;
+							color: transparent;
+							animation:
+								rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+								shimmer 6s ease-in-out 1.2s infinite alternate;
+						}
+					}
+				}
+
+				.hero-cta {
+					width: fit-content;
+					margin-top: auto;
+					position: relative;
+					z-index: 2;
+					animation: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both;
+				}
+
+				.hero-photos {
+					position: absolute;
+					right: -4%;
+					bottom: 18px;
+					width: 50%;
+					aspect-ratio: 1 / 1.25;
+					z-index: 1;
+				}
+
+				.hero-photo {
+					position: absolute;
+					width: 68%;
+					aspect-ratio: 3 / 4;
+					border-radius: 16px;
+					overflow: hidden;
+					background: #1c1c1e;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
+
+					&.placeholder img {
+						object-fit: contain;
+					}
+				}
+
+				// the price tag is a desktop nicety; on a phone the photo speaks for itself
+				.photo-tag {
+					display: none;
+				}
+
+				.photo-0 {
+					right: 8%;
+					bottom: 0;
+					--tilt: 6deg;
+					z-index: 3;
+					animation:
+						card-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.45s both,
+						float 7s ease-in-out 1.5s infinite;
+				}
+
+				.photo-1 {
+					right: 34%;
+					bottom: 14%;
+					--tilt: -8deg;
+					z-index: 2;
+					animation:
+						card-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s both,
+						float 8s ease-in-out 1.7s infinite;
+				}
+
+				.photo-2 {
+					display: none;
 				}
 			}
 

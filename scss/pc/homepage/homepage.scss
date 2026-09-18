@@ -12,43 +12,125 @@
 				position: relative;
 				flex: 1.6;
 				justify-content: center;
-				gap: 20px;
+				gap: 22px;
 				padding: 0 64px;
-				border-radius: 24px;
-				background: #111111;
+				border-radius: 28px;
+				background: #0c0c0d;
 				color: #ffffff;
 				overflow: hidden;
+				isolation: isolate;
+				animation: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+				.orb {
+					position: absolute;
+					z-index: -1;
+					border-radius: 50%;
+					filter: blur(70px);
+					will-change: transform;
+
+					&.orb-a {
+						width: 420px;
+						height: 420px;
+						top: -140px;
+						left: -100px;
+						background: #ff4d2e;
+						opacity: 0.5;
+						animation: orb-drift-a 16s ease-in-out infinite alternate;
+					}
+
+					&.orb-b {
+						width: 360px;
+						height: 360px;
+						bottom: -160px;
+						right: 10%;
+						background: #7a5cff;
+						opacity: 0.35;
+						animation: orb-drift-b 19s ease-in-out infinite alternate;
+					}
+				}
+
+				// faint dotted texture so the glow reads as a surface
+				.grain {
+					position: absolute;
+					inset: 0;
+					z-index: -1;
+					background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+					background-size: 22px 22px;
+					mask-image: linear-gradient(180deg, #000000 0%, transparent 90%);
+				}
 
 				.hero-kicker {
+					display: inline-flex;
+					align-items: center;
+					gap: 8px;
 					width: fit-content;
-					padding: 6px 12px;
-					border: 1px solid rgba(255, 255, 255, 0.25);
+					padding: 7px 14px;
+					border: 1px solid rgba(255, 255, 255, 0.18);
 					border-radius: 999px;
+					background: rgba(255, 255, 255, 0.06);
+					backdrop-filter: blur(8px);
 					font-size: 13px;
 					font-weight: 700;
 					letter-spacing: 0.06em;
 					text-transform: uppercase;
 					color: #ff8a73;
 					position: relative;
-					z-index: 1;
+					z-index: 2;
+					animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s both;
+
+					i {
+						width: 7px;
+						height: 7px;
+						border-radius: 50%;
+						background: #ff4d2e;
+						animation: pulse-dot 2s ease-in-out infinite;
+					}
 				}
 
 				h1 {
-					max-width: 520px;
-					font-size: 72px;
-					line-height: 0.98;
+					display: flex;
+					flex-wrap: wrap;
+					gap: 0 0.24em;
+					max-width: 56%;
+					font-size: clamp(64px, 6vw, 92px);
+					line-height: 0.95;
 					font-weight: 800;
 					letter-spacing: -0.045em;
 					position: relative;
-					z-index: 1;
+					z-index: 2;
+
+					.word {
+						display: inline-block;
+						animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+						&:last-child {
+							background: linear-gradient(100deg, #ffffff 0%, #ffd2c4 45%, #ff4d2e 100%);
+							background-size: 200% 100%;
+							-webkit-background-clip: text;
+							background-clip: text;
+							color: transparent;
+							animation:
+								rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+								shimmer 6s ease-in-out 1.2s infinite alternate;
+						}
+					}
 				}
 
 				.hero-actions {
 					flex-direction: row;
 					gap: 12px;
-					margin-top: 12px;
+					margin-top: 8px;
 					position: relative;
-					z-index: 1;
+					z-index: 2;
+					animation: rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both;
+
+					.MuiButton-endIcon {
+						transition: transform 0.2s;
+					}
+
+					a:hover .MuiButton-endIcon {
+						transform: translateX(4px);
+					}
 
 					.ghost {
 						color: #ffffff;
@@ -61,18 +143,133 @@
 					}
 				}
 
-				.hero-art {
+				/* ---------- floating product photos ---------- */
+				.hero-photos {
 					position: absolute;
-					right: -40px;
-					bottom: -20px;
-					height: 110%;
-					pointer-events: none;
+					top: 50%;
+					right: 5%;
+					width: 42%;
+					max-width: 380px;
+					aspect-ratio: 1 / 1.08;
+					transform: translateY(-50%);
+					z-index: 1;
+				}
+
+				.hero-photo {
+					position: absolute;
+					width: 54%;
+					aspect-ratio: 3 / 4;
+					border-radius: 20px;
+					overflow: hidden;
+					background: #1c1c1e;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+					transition: box-shadow 0.3s;
+
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+						transition: transform 0.5s ease;
+					}
+
+					&:hover {
+						box-shadow: 0 36px 70px rgba(0, 0, 0, 0.6);
+
+						img {
+							transform: scale(1.06);
+						}
+					}
+
+					&.placeholder img {
+						object-fit: contain;
+					}
+				}
+
+				.photo-tag {
+					position: absolute;
+					left: 10px;
+					right: 10px;
+					bottom: 10px;
+					display: flex;
+					flex-direction: column;
+					padding: 8px 12px;
+					border-radius: 12px;
+					background: rgba(255, 255, 255, 0.9);
+					backdrop-filter: blur(8px);
+					color: #111111;
+					font-size: 14px;
+					font-weight: 800;
+
+					em {
+						font-style: normal;
+						font-size: 10px;
+						font-weight: 700;
+						letter-spacing: 0.06em;
+						text-transform: uppercase;
+						color: #8a8a8a;
+					}
+				}
+
+				.photo-0 {
+					right: 0;
+					bottom: 0;
+					--tilt: 6deg;
+					z-index: 3;
+					animation:
+						card-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.45s both,
+						float 7s ease-in-out 1.5s infinite;
+				}
+
+				.photo-1 {
+					right: 38%;
+					bottom: 10%;
+					--tilt: -7deg;
+					z-index: 2;
+					animation:
+						card-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s both,
+						float 8s ease-in-out 1.7s infinite;
+				}
+
+				.photo-2 {
+					right: 14%;
+					top: 0;
+					width: 42%;
+					--tilt: 3deg;
+					z-index: 1;
+					opacity: 0.9;
+					animation:
+						card-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.75s both,
+						float 9s ease-in-out 1.9s infinite;
+				}
+
+				// a single card sits centred rather than in the fan
+				.count-1 .photo-0 {
+					right: 22%;
+					bottom: 8%;
 				}
 			}
 
 			.hero-tiles {
 				flex: 1;
 				gap: 20px;
+			}
+
+			.hero-tile {
+				// backwards, not both: a held last frame would override the hover lift
+				animation: slide-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+
+				&:nth-child(1) {
+					animation-delay: 0.15s;
+				}
+
+				&:nth-child(2) {
+					animation-delay: 0.3s;
+				}
+
+				&:hover {
+					transform: translateY(-4px);
+				}
 			}
 
 			.hero-tile {
@@ -189,5 +386,115 @@
 			padding: 56px 0;
 			background: #f6f5f3;
 		}
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* brand ticker + scroll reveal — shared by pc and mobile              */
+/* ------------------------------------------------------------------ */
+.brand-ticker {
+	overflow: hidden;
+	margin-top: 28px;
+	padding: 18px 0;
+	border-top: 1px solid #ececec;
+	border-bottom: 1px solid #ececec;
+	mask-image: linear-gradient(90deg, transparent, #000000 8%, #000000 92%, transparent);
+
+	.ticker-track {
+		display: flex;
+		width: max-content;
+		animation: ticker 38s linear infinite;
+	}
+
+	&:hover .ticker-track {
+		animation-play-state: paused;
+	}
+
+	.ticker-half {
+		display: flex;
+		flex-shrink: 0;
+	}
+
+	span {
+		display: inline-flex;
+		align-items: center;
+		gap: 28px;
+		padding-right: 28px;
+		font-size: 44px;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		line-height: 1;
+		text-transform: uppercase;
+		white-space: nowrap;
+		color: #111111;
+
+		// stroke drawn under a page-coloured fill: the font's overlapping contours would
+		// otherwise each get their own outline inside the letters
+		&.outlined {
+			color: #ffffff;
+			-webkit-text-stroke: 3px #111111;
+			paint-order: stroke fill;
+		}
+
+		i {
+			font-style: normal;
+			font-size: 22px;
+			color: #ff4d2e;
+			-webkit-text-stroke: 0;
+		}
+	}
+}
+
+// hidden until the section scrolls in; children follow one after another
+.reveal {
+	opacity: 0;
+	transform: translateY(36px);
+	transition:
+		opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+		transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+	&.in-view {
+		opacity: 1;
+		transform: none;
+
+		.product-card,
+		.category-item,
+		.seller-card,
+		.article-card {
+			animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+		}
+
+		@for $i from 1 through 8 {
+			.product-card:nth-child(#{$i}),
+			.category-item:nth-child(#{$i}),
+			.seller-card:nth-child(#{$i}),
+			.article-card:nth-child(#{$i}) {
+				animation-delay: #{0.08 + $i * 0.06}s;
+			}
+		}
+	}
+}
+
+.category-item .category-icon {
+	transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (hover: hover) {
+	.category-item:hover .category-icon {
+		transform: translateY(-4px) rotate(-6deg);
+	}
+}
+
+// motion-sensitive visitors get the same page, standing still
+@media (prefers-reduced-motion: reduce) {
+	.home-page *,
+	.brand-ticker * {
+		animation: none !important;
+	}
+
+	.reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
 	}
 }

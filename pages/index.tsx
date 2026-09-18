@@ -9,6 +9,7 @@ import CategoryStrip from '../libs/components/homepage/CategoryStrip';
 import ProductSection from '../libs/components/homepage/ProductSection';
 import TopSellers from '../libs/components/homepage/TopSellers';
 import CommunityPreview from '../libs/components/homepage/CommunityPreview';
+import Reveal from '../libs/components/common/Reveal';
 import { Direction } from '../libs/enums/common.enum';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -34,24 +35,48 @@ const Home: NextPage = () => {
 		return (
 			<Stack className={'home-page'}>
 				<HeroBanner />
-				<CategoryStrip />
-				<ProductSection title={'New arrivals'} input={newArrivals} />
-				<ProductSection title={'On sale'} input={onSale} />
-				<TopSellers />
-				<ProductSection title={'Best sellers'} input={bestSellers} />
-				<CommunityPreview />
+				<Reveal>
+					<CategoryStrip />
+				</Reveal>
+				<Reveal>
+					<ProductSection title={'New arrivals'} input={newArrivals} />
+				</Reveal>
+				<Reveal>
+					<ProductSection title={'On sale'} input={onSale} />
+				</Reveal>
+				<Reveal>
+					<TopSellers />
+				</Reveal>
+				<Reveal>
+					<ProductSection title={'Best sellers'} input={bestSellers} />
+				</Reveal>
+				<Reveal>
+					<CommunityPreview />
+				</Reveal>
 			</Stack>
 		);
 	} else {
 		return (
 			<Stack className={'home-page'}>
 				<HeroBanner />
-				<CategoryStrip />
-				<ProductSection title={'New arrivals'} input={newArrivals} />
-				<ProductSection title={'On sale'} input={onSale} className={'tinted'} />
-				<TopSellers />
-				<ProductSection title={'Best sellers'} input={bestSellers} />
-				<CommunityPreview />
+				<Reveal>
+					<CategoryStrip />
+				</Reveal>
+				<Reveal>
+					<ProductSection title={'New arrivals'} input={newArrivals} />
+				</Reveal>
+				<Reveal>
+					<ProductSection title={'On sale'} input={onSale} className={'tinted'} />
+				</Reveal>
+				<Reveal>
+					<TopSellers />
+				</Reveal>
+				<Reveal>
+					<ProductSection title={'Best sellers'} input={bestSellers} />
+				</Reveal>
+				<Reveal>
+					<CommunityPreview />
+				</Reveal>
 			</Stack>
 		);
 	}
