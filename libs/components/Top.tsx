@@ -55,7 +55,7 @@ const Top = () => {
 			href: `/product?input=${JSON.stringify(groupInput(ProductGroup.ACCESSORIES))}`,
 			group: 'ACCESSORIES',
 		},
-		{ label: 'Sellers', href: '/seller' },
+		{ label: 'Shops', href: '/shop' },
 		{ label: 'Community', href: '/community' },
 	];
 

@@ -11,7 +11,7 @@ const Footer = () => {
 
 	const links = [
 		{ label: 'Shop', href: '/product' },
-		{ label: 'Sellers', href: '/seller' },
+		{ label: 'Shops', href: '/shop' },
 		{ label: 'Community', href: '/community' },
 		{ label: 'Cart', href: '/cart' },
 	];

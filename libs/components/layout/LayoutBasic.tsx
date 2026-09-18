@@ -21,8 +21,8 @@ const withLayoutBasic = (Component: any) => {
 				case '/product':
 					title = 'Shop';
 					break;
-				case '/seller':
-					title = 'Sellers';
+				case '/shop':
+					title = 'Shops';
 					break;
 				case '/community':
 					title = 'Community';

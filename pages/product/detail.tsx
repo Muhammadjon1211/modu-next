@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { Avatar, Button, CircularProgress, IconButton, Rating, Stack, Tab, Tabs } from '@mui/material';
+import { Avatar, Button, CircularProgress, IconButton, Rating, Stack } from '@mui/material';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
@@ -12,6 +12,7 @@ import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
@@ -21,7 +22,7 @@ import CommentList from '../../libs/components/common/CommentList';
 import { Product } from '../../libs/types/product/product';
 import { GET_PRODUCT } from '../../apollo/user/query';
 import { ADD_TO_CART, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
-import { cartCountVar, userVar } from '../../apollo/store';
+import { cartCountVar, navDepthVar, userVar } from '../../apollo/store';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { ProductColor, ProductSize, ProductStatus } from '../../libs/enums/product.enum';
 import { MemberType } from '../../libs/enums/member.enum';
@@ -55,7 +56,6 @@ const ProductDetail: NextPage = () => {
 	const [quantity, setQuantity] = useState<number>(1);
 	const [size, setSize] = useState<ProductSize | ''>('');
 	const [color, setColor] = useState<ProductColor | ''>('');
-	const [tab, setTab] = useState<string>('details');
 	const [adding, setAdding] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
@@ -88,6 +88,16 @@ const ProductDetail: NextPage = () => {
 	}, [router]);
 
 	/** HANDLERS **/
+	// straight back where the shopper came from, or to the shop when the page was opened directly
+	const backHandler = () => {
+		if (navDepthVar() > 0) router.back();
+		else router.push('/product').then();
+	};
+
+	const scrollToReviewsHandler = () => {
+		document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	};
+
 	const likeProductHandler = async () => {
 		if (!product) return;
 		await likeTargetProductHandler(likeTargetProduct, product._id, user?._id);
@@ -164,7 +174,7 @@ const ProductDetail: NextPage = () => {
 			</Link>
 			<h1 className={'title'}>{product.productTitle}</h1>
 			{product.productRatingCount > 0 && (
-				<Stack className={'rating'} onClick={() => setTab('reviews')}>
+				<Stack className={'rating'} onClick={scrollToReviewsHandler}>
 					<Rating value={product.productRating} precision={0.5} readOnly size={'small'} />
 					<span>
 						{product.productRating.toFixed(1)} ({product.productRatingCount})
@@ -299,48 +309,65 @@ const ProductDetail: NextPage = () => {
 		</Stack>
 	);
 
-	const infoTabs = (
-		<Stack className={'info-tabs'}>
-			<Tabs value={tab} onChange={(e, value) => setTab(value)}>
-				<Tab value={'details'} label={t('Details')} />
-				<Tab value={'reviews'} label={`${t('Reviews')} (${product.productComments})`} />
-			</Tabs>
-			{tab === 'details' ? (
-				<Stack className={'details-pane'}>
-					{product.productDesc && <p className={'desc'}>{product.productDesc}</p>}
-					<Stack className={'spec-list'}>
-						{specs.map((spec) => (
-							<Stack key={spec.label} className={'spec'}>
-								<span>{t(spec.label)}</span>
-								<strong>{spec.value}</strong>
-							</Stack>
-						))}
-					</Stack>
-					{!!product.productTags?.length && (
-						<Stack className={'tag-list'}>
-							{product.productTags.map((tag) => (
-								<span key={tag}>#{tag}</span>
-							))}
+	const backBar = (
+		<button type={'button'} className={'back-link'} onClick={backHandler}>
+			<ArrowBackRoundedIcon fontSize={'small'} /> {t('Back')}
+		</button>
+	);
+
+	const details = (
+		<Stack className={'details-pane'}>
+			{product.productDesc && <p className={'desc'}>{product.productDesc}</p>}
+			{specs.length > 0 && (
+				<Stack className={'spec-list'}>
+					{specs.map((spec) => (
+						<Stack key={spec.label} className={'spec'}>
+							<span>{t(spec.label)}</span>
+							<strong>{spec.value}</strong>
 						</Stack>
-					)}
+					))}
 				</Stack>
-			) : (
-				<CommentList
-					refId={product._id}
-					group={CommentGroup.PRODUCT}
-					withRating
-					onChanged={() => refetch({ input: productId })}
-				/>
 			)}
+			{!!product.productTags?.length && (
+				<Stack className={'tag-list'}>
+					{product.productTags.map((tag) => (
+						<span key={tag}>#{tag}</span>
+					))}
+				</Stack>
+			)}
+		</Stack>
+	);
+
+	const reviews = (
+		<Stack className={'reviews-section'} id={'reviews'}>
+			<Stack className={'reviews-head'}>
+				<h2>
+					{t('Reviews')} <span>{product.productComments}</span>
+				</h2>
+				{product.productRatingCount > 0 && (
+					<Stack className={'rating'}>
+						<Rating value={product.productRating} precision={0.5} readOnly size={'small'} />
+						<strong>{product.productRating.toFixed(1)}</strong>
+					</Stack>
+				)}
+			</Stack>
+			<CommentList
+				refId={product._id}
+				group={CommentGroup.PRODUCT}
+				withRating
+				onChanged={() => refetch({ input: productId })}
+			/>
 		</Stack>
 	);
 
 	if (device === 'mobile') {
 		return (
 			<div id="product-detail-page">
+				<Stack className={'back-row'}>{backBar}</Stack>
 				<ProductGallery images={product.productImages} title={product.productTitle} />
 				{buyBox}
-				{infoTabs}
+				{details}
+				{reviews}
 				<RelatedProducts productId={product._id} />
 			</div>
 		);
@@ -348,15 +375,21 @@ const ProductDetail: NextPage = () => {
 		return (
 			<div id="product-detail-page">
 				<Stack className={'container'}>
+					{backBar}
 					<Stack className={'detail-top'}>
-						<ProductGallery
-							images={product.productImages}
-							title={product.productTitle}
-							discount={product.productDiscount}
-						/>
-						{buyBox}
+						<Stack className={'detail-left'}>
+							<ProductGallery
+								images={product.productImages}
+								title={product.productTitle}
+								discount={product.productDiscount}
+							/>
+							{reviews}
+						</Stack>
+						<Stack className={'detail-right'}>
+							{buyBox}
+							{details}
+						</Stack>
 					</Stack>
-					{infoTabs}
 					<RelatedProducts productId={product._id} />
 				</Stack>
 			</div>

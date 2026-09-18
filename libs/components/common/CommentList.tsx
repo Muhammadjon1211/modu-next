@@ -136,7 +136,7 @@ const CommentList = (props: CommentListType) => {
 								<Link href={{ pathname: '/member', query: { memberId: comment.memberId } }}>
 									{comment?.memberData?.memberNick}
 								</Link>
-								{comment.isSellerReply && <span className={'seller-tag'}>{t('Seller')}</span>}
+								{comment.isSellerReply && <span className={'seller-tag'}>{t('Shop owner')}</span>}
 								{comment.commentRating ? <Rating value={comment.commentRating} readOnly size={'small'} /> : null}
 								<span className={'date'}>{formatDate(comment.createdAt)}</span>
 								{comment.memberId === user?._id && (

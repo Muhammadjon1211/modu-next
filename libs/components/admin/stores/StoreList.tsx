@@ -29,7 +29,7 @@ interface Data {
 }
 
 const headCells: readonly HeadCell<Data>[] = [
-	{ id: 'memberNick', label: 'Store', numeric: false, sortable: true },
+	{ id: 'memberNick', label: 'Shop', numeric: false, sortable: true },
 	{ id: 'memberPhone', label: 'Phone', numeric: false },
 	{ id: 'memberProducts', label: 'Products', numeric: true, sortable: true },
 	{ id: 'memberFollowers', label: 'Followers', numeric: true, sortable: true },
@@ -83,10 +83,7 @@ const StoreList = (props: StoreListType) => {
 						rows.map((store) => (
 							<TableRow key={store._id} hover>
 								<TableCell>
-									<Link
-										href={{ pathname: '/_admin/stores/detail', query: { id: store._id } }}
-										className={'cell-member'}
-									>
+									<Link href={{ pathname: '/_admin/shops/detail', query: { id: store._id } }} className={'cell-member'}>
 										<Avatar src={getMemberImage(store.memberImage)} />
 										<Stack>
 											<strong>{store.memberShopName || store.memberNick}</strong>
@@ -120,7 +117,7 @@ const StoreList = (props: StoreListType) => {
 					) : (
 						<TableRow>
 							<TableCell colSpan={headCells.length} align={'center'} className={'empty-cell'}>
-								No stores
+								No shops
 							</TableCell>
 						</TableRow>
 					)}

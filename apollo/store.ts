@@ -13,3 +13,6 @@ export const userVar = makeVar<CustomJwtPayload>({
 
 /** number of lines in the open cart — drives the header badge */
 export const cartCountVar = makeVar<number>(0);
+
+/** how many in-app page changes happened this visit — 0 means a back step would leave the site */
+export const navDepthVar = makeVar<number>(0);

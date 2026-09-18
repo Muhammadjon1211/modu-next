@@ -13,7 +13,7 @@ import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 const menus = [
 	{ title: 'Dashboard', href: '/_admin', icon: <SpaceDashboardOutlinedIcon /> },
 	{ title: 'Users', href: '/_admin/users', icon: <PeopleAltOutlinedIcon /> },
-	{ title: 'Stores', href: '/_admin/stores', icon: <StorefrontOutlinedIcon /> },
+	{ title: 'Shops', href: '/_admin/shops', icon: <StorefrontOutlinedIcon /> },
 	{ title: 'Products', href: '/_admin/products', icon: <CheckroomOutlinedIcon /> },
 	{ title: 'Orders', href: '/_admin/orders', icon: <ReceiptLongOutlinedIcon /> },
 	{ title: 'Returns', href: '/_admin/returns', icon: <AssignmentReturnOutlinedIcon /> },

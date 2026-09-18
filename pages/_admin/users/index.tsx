@@ -94,7 +94,7 @@ const AdminUsers: NextPage = () => {
 				<Tabs value={value} onChange={(e, newValue) => tabChangeHandler(newValue)}>
 					<Tab value={'ALL'} label={'All'} />
 					<Tab value={MemberType.USER} label={'Buyers'} />
-					<Tab value={MemberType.SELLER} label={'Sellers'} />
+					<Tab value={MemberType.SELLER} label={'Shops'} />
 					<Tab value={MemberType.ADMIN} label={'Admins'} />
 					<Tab value={MemberStatus.BLOCK} label={'Blocked'} />
 					<Tab value={MemberStatus.DELETE} label={'Deleted'} />

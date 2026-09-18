@@ -82,7 +82,7 @@ const AdminStores: NextPage = () => {
 		try {
 			if (
 				input.memberStatus !== MemberStatus.ACTIVE &&
-				!(await sweetConfirmAlert(`Set store to ${input.memberStatus}?`))
+				!(await sweetConfirmAlert(`Set shop to ${input.memberStatus}?`))
 			)
 				return;
 			await updateMemberByAdmin({ variables: { input } });
@@ -96,7 +96,7 @@ const AdminStores: NextPage = () => {
 
 	return (
 		<Stack className={'admin-page'}>
-			<h2 className={'admin-title'}>Stores</h2>
+			<h2 className={'admin-title'}>Shops</h2>
 			<Stack className={'admin-toolbar'}>
 				<Tabs value={storesInquiry.search.memberStatus ?? 'ALL'} onChange={(e, value) => tabChangeHandler(value)}>
 					<Tab value={'ALL'} label={'All'} />

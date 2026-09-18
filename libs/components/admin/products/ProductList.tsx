@@ -33,7 +33,7 @@ interface Data {
 
 const headCells: readonly HeadCell<Data>[] = [
 	{ id: 'productTitle', label: 'Product', numeric: false, sortable: true },
-	{ id: 'memberId', label: 'Seller', numeric: false },
+	{ id: 'memberId', label: 'Shop', numeric: false },
 	{ id: 'productCategory', label: 'Category', numeric: false, sortable: true },
 	{ id: 'productPrice', label: 'Price', numeric: true, sortable: true },
 	{ id: 'productStock', label: 'Stock', numeric: true, sortable: true },

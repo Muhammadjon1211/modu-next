@@ -3,9 +3,8 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { Button, Drawer, InputBase, MenuItem, Pagination, Select, Skeleton, Stack } from '@mui/material';
+import { InputBase, MenuItem, Pagination, Select, Skeleton, Stack } from '@mui/material';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
@@ -50,7 +49,6 @@ const ProductList: NextPage<ProductListType> = ({ initialInput = defaultInput })
 	const [products, setProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [searchText, setSearchText] = useState<string>('');
-	const [filterOpen, setFilterOpen] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
@@ -174,36 +172,33 @@ const ProductList: NextPage<ProductListType> = ({ initialInput = defaultInput })
 		</>
 	);
 
+	// the filter row sticks under the header and only ever scrolls sideways
+	const filterBand = (
+		<Stack className={'filter-band'}>
+			{device === 'mobile' ? (
+				<Filter searchFilter={searchFilter} initialInput={initialInput} />
+			) : (
+				<Stack className={'container'}>
+					<Filter searchFilter={searchFilter} initialInput={initialInput} />
+				</Stack>
+			)}
+		</Stack>
+	);
+
 	if (device === 'mobile') {
 		return (
 			<div id="product-list-page">
 				{toolbar}
-				<Button
-					className={'filter-open-btn'}
-					variant={'outlined'}
-					startIcon={<TuneRoundedIcon />}
-					onClick={() => setFilterOpen(true)}
-				>
-					{t('Filters')}
-				</Button>
-				<Drawer anchor={'bottom'} open={filterOpen} onClose={() => setFilterOpen(false)} className={'filter-drawer'}>
-					<Filter searchFilter={searchFilter} initialInput={initialInput} />
-				</Drawer>
-				{list}
+				{filterBand}
+				<Stack className={'list-body'}>{list}</Stack>
 			</div>
 		);
 	} else {
 		return (
 			<div id="product-list-page">
-				<Stack className={'container'}>
-					<Stack className={'filter-side'}>
-						<Filter searchFilter={searchFilter} initialInput={initialInput} />
-					</Stack>
-					<Stack className={'main-config'}>
-						{toolbar}
-						{list}
-					</Stack>
-				</Stack>
+				<Stack className={'container list-head'}>{toolbar}</Stack>
+				{filterBand}
+				<Stack className={'container list-body'}>{list}</Stack>
 			</div>
 		);
 	}

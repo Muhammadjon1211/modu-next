@@ -142,7 +142,7 @@ const Join: NextPage = () => {
 							className={input.type === MemberType.SELLER ? 'active' : ''}
 							onClick={() => handleInput('type', MemberType.SELLER)}
 						>
-							{t('Seller')}
+							{t('Shop owner')}
 						</button>
 					</Stack>
 				</>

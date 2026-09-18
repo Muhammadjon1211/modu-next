@@ -51,7 +51,7 @@ const TopSellers = (props: TopSellersType) => {
 			<Stack className={'container'}>
 				<Stack className={'section-head'}>
 					<h2>{t('Top shops')}</h2>
-					<Link href={'/seller'} className={'see-all'}>
+					<Link href={'/shop'} className={'see-all'}>
 						{t('See all')} <ArrowForwardRoundedIcon />
 					</Link>
 				</Stack>

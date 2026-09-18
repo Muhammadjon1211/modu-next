@@ -12,7 +12,7 @@ export default function Document() {
 				<meta
 					name={'description'}
 					content={
-						'Shop clothes and accessories from independent sellers on Modu. | ' +
+						'Shop clothes and accessories from independent shops on Modu. | ' +
 						'모두에서 다양한 셀러의 의류와 액세서리를 만나보세요. | ' +
 						'Одежда и аксессуары от независимых продавцов на Modu.'
 					}

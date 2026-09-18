@@ -72,7 +72,7 @@ const SellerList: NextPage<SellerListType> = ({ initialInput = defaultInput }) =
 
 	/** HANDLERS **/
 	const pushInputHandler = async (input: SellersInquiry) => {
-		await router.push(`/seller?input=${JSON.stringify(input)}`, `/seller?input=${JSON.stringify(input)}`, {
+		await router.push(`/shop?input=${JSON.stringify(input)}`, `/shop?input=${JSON.stringify(input)}`, {
 			scroll: false,
 		});
 	};

@@ -87,7 +87,7 @@ const MemberList = (props: MemberListType) => {
 									<Link
 										href={
 											member.memberType === MemberType.SELLER
-												? { pathname: '/_admin/stores/detail', query: { id: member._id } }
+												? { pathname: '/_admin/shops/detail', query: { id: member._id } }
 												: { pathname: '/member', query: { memberId: member._id } }
 										}
 										target={member.memberType === MemberType.SELLER ? undefined : '_blank'}

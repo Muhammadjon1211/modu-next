@@ -272,16 +272,6 @@
 		}
 	}
 
-	/* ---------------- product list ---------------- */
-	#product-list-page {
-		padding: 16px;
-
-		.filter-open-btn {
-			margin-bottom: 16px;
-			width: fit-content;
-		}
-	}
-
 	/* ---------------- product detail ---------------- */
 	#product-detail-page {
 		.product-gallery {
@@ -376,13 +366,21 @@
 			}
 		}
 
-		.info-tabs {
-			margin-top: 40px;
-			padding: 0 16px;
+		.back-row {
+			padding: 8px 8px 4px;
+		}
 
-			.details-pane .spec-list {
+		.details-pane {
+			margin: 24px 16px 0;
+
+			.spec-list {
 				grid-template-columns: minmax(0, 1fr);
 			}
+		}
+
+		.reviews-section {
+			margin-top: 40px;
+			padding: 0 16px;
 		}
 
 		.related-products {

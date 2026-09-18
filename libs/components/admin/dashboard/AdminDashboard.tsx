@@ -117,7 +117,7 @@ const AdminDashboard = () => {
 					icon={<PeopleAltOutlinedIcon />}
 					label={'Users'}
 					value={stats.members ?? 0}
-					sub={`${formatterStr(stats.sellers)} sellers`}
+					sub={`${formatterStr(stats.sellers)} shops`}
 				/>
 				<StatCard
 					href={'/_admin/products'}

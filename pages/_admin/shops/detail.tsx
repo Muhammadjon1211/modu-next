@@ -75,7 +75,7 @@ const AdminStoreDetail: NextPage = () => {
 
 	/** HANDLERS **/
 	const changeTabHandler = async (value: string) => {
-		await router.replace({ pathname: '/_admin/stores/detail', query: { id: storeId, tab: value } }, undefined, {
+		await router.replace({ pathname: '/_admin/shops/detail', query: { id: storeId, tab: value } }, undefined, {
 			shallow: true,
 			scroll: false,
 		});
@@ -83,7 +83,7 @@ const AdminStoreDetail: NextPage = () => {
 
 	const updateStatusHandler = async (memberStatus: MemberStatus) => {
 		try {
-			if (memberStatus !== MemberStatus.ACTIVE && !(await sweetConfirmAlert(`Set store to ${memberStatus}?`))) return;
+			if (memberStatus !== MemberStatus.ACTIVE && !(await sweetConfirmAlert(`Set shop to ${memberStatus}?`))) return;
 			await updateMemberByAdmin({ variables: { input: { _id: storeId, memberStatus } } });
 			await refetchStore({ input: storeId });
 			await sweetTopSmallSuccessAlert('Updated', 800);
@@ -111,8 +111,8 @@ const AdminStoreDetail: NextPage = () => {
 
 	return (
 		<Stack className={'admin-page store-detail'}>
-			<Link href={'/_admin/stores'} className={'back-link'}>
-				<ArrowBackRoundedIcon fontSize={'small'} /> Stores
+			<Link href={'/_admin/shops'} className={'back-link'}>
+				<ArrowBackRoundedIcon fontSize={'small'} /> Shops
 			</Link>
 			<StoreHeader
 				store={store}

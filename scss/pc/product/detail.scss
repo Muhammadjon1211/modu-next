@@ -185,70 +185,105 @@
 			}
 		}
 
-		.info-tabs {
-			margin-top: 64px;
+		.back-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			width: fit-content;
+			padding: 6px 12px 6px 8px;
+			border-radius: 999px;
+			font-size: 14px;
+			font-weight: 700;
+			color: #555555;
+			transition:
+				background 0.15s,
+				color 0.15s;
 
-			.MuiTabs-root {
-				border-bottom: 1px solid #ececec;
-				margin-bottom: 28px;
+			&:hover {
+				background: #f6f5f3;
+				color: #111111;
+			}
+		}
+
+		/* item details sit in the right column, under the buy options */
+		.details-pane {
+			gap: 20px;
+			padding-top: 24px;
+			border-top: 1px solid #f0f0f0;
+
+			.desc {
+				font-size: 15px;
+				line-height: 1.7;
+				color: #333333;
+				white-space: pre-wrap;
 			}
 
-			.MuiTab-root {
-				font-size: 16px;
-			}
+			.spec-list {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 0 24px;
 
-			.MuiTabs-indicator {
-				background: #111111;
-				height: 3px;
-			}
-
-			.details-pane {
-				gap: 28px;
-				max-width: 820px;
-
-				.desc {
-					font-size: 16px;
-					line-height: 1.75;
-					color: #333333;
-					white-space: pre-wrap;
-				}
-
-				.spec-list {
-					display: grid;
-					grid-template-columns: repeat(2, minmax(0, 1fr));
-					gap: 0 32px;
-
-					.spec {
-						flex-direction: row;
-						justify-content: space-between;
-						padding: 14px 0;
-						border-bottom: 1px solid #f0f0f0;
-						font-size: 14px;
-
-						span {
-							color: #8a8a8a;
-						}
-					}
-				}
-
-				.tag-list {
+				.spec {
 					flex-direction: row;
-					flex-wrap: wrap;
-					gap: 8px;
+					justify-content: space-between;
+					gap: 12px;
+					padding: 12px 0;
+					border-bottom: 1px solid #f0f0f0;
+					font-size: 14px;
 
 					span {
-						padding: 6px 12px;
-						background: #f6f5f3;
-						border-radius: 999px;
-						font-size: 13px;
-						font-weight: 600;
-						color: #555555;
+						color: #8a8a8a;
+					}
+
+					strong {
+						text-align: right;
 					}
 				}
 			}
 
-			.comment-list {
-				max-width: 820px;
+			.tag-list {
+				flex-direction: row;
+				flex-wrap: wrap;
+				gap: 8px;
+
+				span {
+					padding: 6px 12px;
+					background: #f6f5f3;
+					border-radius: 999px;
+					font-size: 13px;
+					font-weight: 600;
+					color: #555555;
+				}
+			}
+		}
+
+		/* reviews start right under the photos */
+		.reviews-section {
+			gap: 16px;
+			scroll-margin-top: 96px;
+
+			.reviews-head {
+				flex-direction: row;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+
+				h2 {
+					font-size: 22px;
+					font-weight: 800;
+
+					span {
+						margin-left: 4px;
+						color: #8a8a8a;
+					}
+				}
+
+				.rating {
+					flex-direction: row;
+					align-items: center;
+					gap: 6px;
+					font-size: 14px;
+				}
 			}
 		}
 
@@ -264,6 +299,7 @@
 
 		.container {
 			flex-direction: column;
+			gap: 16px;
 		}
 
 		.detail-top {
@@ -272,10 +308,20 @@
 			gap: 56px;
 		}
 
-		.product-gallery {
-			position: sticky;
-			top: 96px;
+		.detail-left {
 			flex: 1.15;
+			min-width: 0;
+			gap: 48px;
+		}
+
+		.detail-right {
+			flex: 1;
+			min-width: 0;
+			gap: 28px;
+			padding-top: 8px;
+		}
+
+		.product-gallery {
 			flex-direction: row;
 			gap: 14px;
 			min-width: 0;
@@ -412,12 +458,6 @@
 					font-weight: 800;
 				}
 			}
-		}
-
-		.buy-box {
-			flex: 1;
-			min-width: 0;
-			padding-top: 8px;
 		}
 	}
 }
