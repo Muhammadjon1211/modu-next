@@ -1,0 +1,46 @@
+{
+	"name": "modu-next",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev -p 3000",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"changelog": "standard-version --skip.tag"
+	},
+	"dependencies": {
+		"@apollo/client": "~3.13.9",
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.1",
+		"@mui/icons-material": "5",
+		"@mui/material": "5",
+		"@toast-ui/react-editor": "3.2.3",
+		"animate.css": "^4.1.1",
+		"apollo-upload-client": "18",
+		"browser-image-compression": "^2.0.2",
+		"graphql": "^16.9.0",
+		"i18next": "23",
+		"jwt-decode": "4",
+		"moment": "^2.31.0",
+		"next": "14.2.33",
+		"next-i18next": "15",
+		"react": "18.3.1",
+		"react-dom": "18.3.1",
+		"react-i18next": "14",
+		"subscriptions-transport-ws": "^0.11.0",
+		"sweetalert2": "^11.26.25",
+		"swiper": "11"
+	},
+	"devDependencies": {
+		"@types/node": "20",
+		"@types/react": "18",
+		"@types/react-dom": "18",
+		"eslint": "8",
+		"eslint-config-next": "14.2.33",
+		"prettier": "^3.9.8",
+		"sass": "1.77.8",
+		"standard-version": "^9.5.0",
+		"typescript": "5"
+	}
+}

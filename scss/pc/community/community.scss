@@ -1,0 +1,161 @@
+#pc-wrap,
+#mobile-wrap {
+	#community-list-page {
+		.community-toolbar {
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+			margin-bottom: 32px;
+			border-bottom: 1px solid #ececec;
+
+			.MuiTab-root {
+				font-size: 15px;
+			}
+
+			.MuiTabs-indicator {
+				background: #111111;
+				height: 3px;
+			}
+
+			.toolbar-right {
+				flex-direction: row;
+				align-items: center;
+				gap: 12px;
+				padding-bottom: 8px;
+
+				.search-field {
+					width: 260px;
+				}
+			}
+		}
+	}
+
+	#community-detail-page {
+		.article-wrap {
+			width: 100%;
+			max-width: 800px;
+			margin: 0 auto;
+			gap: 24px;
+		}
+
+		.back-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			width: fit-content;
+			font-size: 14px;
+			font-weight: 700;
+			color: #8a8a8a;
+
+			&:hover {
+				color: #111111;
+			}
+		}
+
+		.article-title {
+			font-size: 40px;
+			line-height: 1.15;
+			font-weight: 800;
+			letter-spacing: -0.03em;
+		}
+
+		.article-meta {
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			padding-bottom: 20px;
+			border-bottom: 1px solid #f0f0f0;
+
+			.author {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+
+				strong {
+					font-size: 15px;
+				}
+
+				span {
+					font-size: 13px;
+					color: #8a8a8a;
+				}
+			}
+
+			.meta-right {
+				flex-direction: row;
+				align-items: center;
+				gap: 6px;
+				font-size: 14px;
+				color: #8a8a8a;
+
+				> span {
+					display: inline-flex;
+					align-items: center;
+					gap: 4px;
+					margin-right: 8px;
+				}
+
+				.like-btn {
+					color: #111111;
+
+					&.liked {
+						color: #ff4d2e;
+					}
+				}
+			}
+		}
+
+		.article-cover {
+			width: 100%;
+			max-height: 520px;
+			object-fit: cover;
+			border-radius: 20px;
+			background: #f3f2ef;
+		}
+
+		.article-content {
+			.toastui-editor-contents {
+				font-family: 'Manrope', sans-serif;
+				font-size: 17px;
+				line-height: 1.8;
+				color: #222222;
+
+				img {
+					border-radius: 14px;
+				}
+			}
+		}
+
+		.article-comments {
+			gap: 16px;
+			margin-top: 32px;
+			padding-top: 32px;
+			border-top: 1px solid #ececec;
+
+			h3 {
+				font-size: 20px;
+				font-weight: 800;
+
+				span {
+					color: #8a8a8a;
+					margin-left: 4px;
+				}
+			}
+		}
+	}
+}
+
+#pc-wrap {
+	#community-list-page {
+		padding: 32px 0 0;
+
+		.container {
+			flex-direction: column;
+		}
+	}
+
+	#community-detail-page {
+		padding: 40px 0 0;
+	}
+}

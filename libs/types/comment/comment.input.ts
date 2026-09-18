@@ -1,0 +1,21 @@
+import { CommentGroup } from '../../enums/comment.enum';
+import { Direction } from '../../enums/common.enum';
+
+export interface CommentInput {
+	commentGroup: CommentGroup;
+	commentContent: string;
+	commentRefId: string;
+	commentRating?: number;
+}
+
+interface CMSearch {
+	commentRefId: string;
+}
+
+export interface CommentsInquiry {
+	page: number;
+	limit: number;
+	sort?: string;
+	direction?: Direction;
+	search: CMSearch;
+}
