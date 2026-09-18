@@ -10,6 +10,7 @@ import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
@@ -36,7 +37,7 @@ import {
 	RETURN_WINDOW_DAYS,
 	seasonLabels,
 } from '../../libs/config';
-import { formatPrice, getMemberImage, likeTargetProductHandler, salePrice } from '../../libs/utils';
+import { formatPrice, formatterStr, getMemberImage, likeTargetProductHandler, salePrice } from '../../libs/utils';
 import { sweetLoginConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { T } from '../../libs/types/common';
 
@@ -169,18 +170,19 @@ const ProductDetail: NextPage = () => {
 
 	const buyBox = (
 		<Stack className={'buy-box'}>
-			<Link href={{ pathname: '/member', query: { memberId: product.memberId } }} className={'brand'}>
-				{product.productBrand}
-			</Link>
+			<Stack className={'brand-row'}>
+				<Link href={{ pathname: '/member', query: { memberId: product.memberId } }} className={'brand'}>
+					{product.productBrand}
+				</Link>
+				{product.productRatingCount > 0 && (
+					<button type={'button'} className={'rating'} onClick={scrollToReviewsHandler}>
+						<StarRoundedIcon />
+						{product.productRating.toFixed(1)}
+						<em>({product.productRatingCount})</em>
+					</button>
+				)}
+			</Stack>
 			<h1 className={'title'}>{product.productTitle}</h1>
-			{product.productRatingCount > 0 && (
-				<Stack className={'rating'} onClick={scrollToReviewsHandler}>
-					<Rating value={product.productRating} precision={0.5} readOnly size={'small'} />
-					<span>
-						{product.productRating.toFixed(1)} ({product.productRatingCount})
-					</span>
-				</Stack>
-			)}
 			<Stack className={'price'}>
 				{product.productDiscount > 0 && <span className={'discount'}>{product.productDiscount}%</span>}
 				<strong>{formatPrice(salePrice(product.productPrice, product.productDiscount))}</strong>
@@ -293,6 +295,11 @@ const ProductDetail: NextPage = () => {
 					<AssignmentReturnOutlinedIcon />
 					{t('{{days}}-day returns', { days: RETURN_WINDOW_DAYS })}
 				</span>
+				{product.productSales > 0 && (
+					<span className={'sold-count'}>
+						{t('Sold')} {formatterStr(product.productSales)}
+					</span>
+				)}
 			</Stack>
 
 			{seller && (

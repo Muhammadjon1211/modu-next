@@ -7,7 +7,7 @@ import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import { Product } from '../../types/product/product';
 import { ProductStatus } from '../../enums/product.enum';
-import { formatPrice, getImageUrl, imageFallbackHandler, salePrice } from '../../utils';
+import { formatPrice, formatterStr, getImageUrl, imageFallbackHandler, salePrice } from '../../utils';
 
 interface ProductCardType {
 	product: Product;
@@ -45,7 +45,16 @@ const ProductCard = (props: ProductCardType) => {
 				</IconButton>
 			)}
 			<Stack className={'card-info'}>
-				<span className={'brand'}>{product?.productBrand}</span>
+				<Stack className={'brand-row'}>
+					<span className={'brand'}>{product?.productBrand}</span>
+					{product?.productRatingCount > 0 && (
+						<span className={'rating'}>
+							<StarRoundedIcon />
+							{product.productRating.toFixed(1)}
+							<em>({product.productRatingCount})</em>
+						</span>
+					)}
+				</Stack>
 				<Link href={href} className={'title'}>
 					{product?.productTitle}
 				</Link>
@@ -55,12 +64,10 @@ const ProductCard = (props: ProductCardType) => {
 					</strong>
 					{product?.productDiscount > 0 && <s>{formatPrice(product?.productPrice)}</s>}
 				</Stack>
-				{product?.productRatingCount > 0 && (
-					<Stack className={'rating-row'}>
-						<StarRoundedIcon />
-						<span>{product.productRating.toFixed(1)}</span>
-						<em>({product.productRatingCount})</em>
-					</Stack>
+				{product?.productSales > 0 && (
+					<span className={'sold-count'}>
+						{t('Sold')} {formatterStr(product.productSales)}
+					</span>
 				)}
 			</Stack>
 		</Stack>

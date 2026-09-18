@@ -147,10 +147,24 @@
 		}
 
 		.card-info {
+			// fills the card so the sold count can sit on the bottom edge of every card in a row
+			flex: 1;
 			gap: 4px;
 			padding: 0 2px;
 
+			.brand-row {
+				flex-direction: row;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				min-width: 0;
+			}
+
 			.brand {
+				min-width: 0;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 				font-size: 12px;
 				font-weight: 700;
 				color: #8a8a8a;
@@ -188,15 +202,16 @@
 				}
 			}
 
-			.rating-row {
-				flex-direction: row;
+			.rating {
+				flex-shrink: 0;
+				display: inline-flex;
 				align-items: center;
 				gap: 2px;
 				font-size: 12px;
 				font-weight: 700;
 
 				svg {
-					font-size: 16px;
+					font-size: 15px;
 					color: #f5a623;
 				}
 
@@ -204,8 +219,15 @@
 					font-style: normal;
 					color: #8a8a8a;
 					font-weight: 500;
-					margin-left: 2px;
+					margin-left: 1px;
 				}
+			}
+
+			.sold-count {
+				margin-top: auto;
+				padding-top: 2px;
+				font-size: 12px;
+				color: #8a8a8a;
 			}
 		}
 	}

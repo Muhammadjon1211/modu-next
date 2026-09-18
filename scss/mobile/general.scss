@@ -363,6 +363,10 @@
 			.perks {
 				flex-direction: column;
 				gap: 10px;
+
+				.sold-count {
+					margin-left: 0;
+				}
 			}
 		}
 

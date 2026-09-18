@@ -204,6 +204,7 @@ export const GET_RELATED_PRODUCTS = gql`
 				productOnSale
 				productFreeShipping
 				productLikes
+				productSales
 				productRating
 				productRatingCount
 				memberId
@@ -237,6 +238,7 @@ export const GET_FAVORITES = gql`
 				productOnSale
 				productFreeShipping
 				productLikes
+				productSales
 				productRating
 				productRatingCount
 				memberId
@@ -270,6 +272,7 @@ export const GET_VISITED = gql`
 				productOnSale
 				productFreeShipping
 				productLikes
+				productSales
 				productRating
 				productRatingCount
 				memberId
@@ -306,6 +309,7 @@ export const GET_SELLER_PRODUCTS = gql`
 				productLikes
 				productSales
 				productRating
+				productRatingCount
 				soldOutAt
 				createdAt
 				updatedAt

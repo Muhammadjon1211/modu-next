@@ -25,17 +25,42 @@
 				margin-top: -8px;
 			}
 
-			.rating {
+			.brand-row {
 				flex-direction: row;
 				align-items: center;
-				gap: 8px;
-				cursor: pointer;
-				width: fit-content;
+				justify-content: space-between;
+				gap: 12px;
+			}
 
-				span {
-					font-size: 13px;
-					font-weight: 600;
-					color: #555555;
+			.rating {
+				flex-shrink: 0;
+				display: inline-flex;
+				align-items: center;
+				gap: 3px;
+				padding: 0;
+				border: 0;
+				background: none;
+				font-size: 14px;
+				font-weight: 700;
+				color: #111111;
+				cursor: pointer;
+
+				svg {
+					font-size: 18px;
+					color: #f5a623;
+				}
+
+				em {
+					font-style: normal;
+					font-weight: 500;
+					color: #8a8a8a;
+				}
+
+				@media (hover: hover) {
+					&:hover em {
+						color: #111111;
+						text-decoration: underline;
+					}
 				}
 			}
 
@@ -158,6 +183,12 @@
 
 				svg {
 					font-size: 20px;
+				}
+
+				.sold-count {
+					margin-left: auto;
+					color: #8a8a8a;
+					font-weight: 600;
 				}
 			}
 
