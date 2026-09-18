@@ -88,7 +88,12 @@ const ProductList = (props: ProductListType) => {
 						rows.map((product) => (
 							<TableRow key={product._id} hover>
 								<TableCell>
-									<Link href={{ pathname: '/product/detail', query: { id: product._id } }} className={'cell-product'}>
+									<Link
+										href={{ pathname: '/product/detail', query: { id: product._id } }}
+										target={'_blank'}
+										rel={'noreferrer'}
+										className={'cell-product'}
+									>
 										<img src={getImageUrl(product.productImages?.[0])} alt={''} onError={imageFallbackHandler()} />
 										<Stack>
 											<strong>{product.productTitle}</strong>
@@ -97,7 +102,11 @@ const ProductList = (props: ProductListType) => {
 									</Link>
 								</TableCell>
 								<TableCell>
-									<Link href={{ pathname: '/member', query: { memberId: product.memberId } }}>
+									<Link
+										href={{ pathname: '/member', query: { memberId: product.memberId } }}
+										target={'_blank'}
+										rel={'noreferrer'}
+									>
 										{product.memberData?.memberShopName || product.memberData?.memberNick}
 									</Link>
 								</TableCell>

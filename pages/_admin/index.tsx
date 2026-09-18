@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
+import { Stack } from '@mui/material';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import withAdminLayout from '../../libs/components/layout/LayoutAdmin';
+import AdminDashboard from '../../libs/components/admin/dashboard/AdminDashboard';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -11,14 +12,12 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const AdminHome: NextPage = () => {
-	const router = useRouter();
-
-	/** LIFECYCLES **/
-	useEffect(() => {
-		router.push('/_admin/users').then();
-	}, []);
-
-	return <></>;
+	return (
+		<Stack className={'admin-page plain'}>
+			<h2 className={'admin-title'}>Dashboard</h2>
+			<AdminDashboard />
+		</Stack>
+	);
 };
 
 export default withAdminLayout(AdminHome);

@@ -83,7 +83,12 @@ const MemberList = (props: MemberListType) => {
 						rows.map((member) => (
 							<TableRow key={member._id} hover>
 								<TableCell>
-									<Link href={{ pathname: '/member', query: { memberId: member._id } }} className={'cell-member'}>
+									<Link
+										href={{ pathname: '/member', query: { memberId: member._id } }}
+										target={'_blank'}
+										rel={'noreferrer'}
+										className={'cell-member'}
+									>
 										<Avatar src={getMemberImage(member.memberImage)} />
 										<Stack>
 											<strong>{member.memberNick}</strong>

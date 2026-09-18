@@ -92,7 +92,12 @@ const ReturnList = (props: ReturnListType) => {
 						rows.map((ele) => (
 							<TableRow key={ele._id} hover>
 								<TableCell>
-									<Link href={{ pathname: '/product/detail', query: { id: ele.productId } }} className={'cell-product'}>
+									<Link
+										href={{ pathname: '/product/detail', query: { id: ele.productId } }}
+										target={'_blank'}
+										rel={'noreferrer'}
+										className={'cell-product'}
+									>
 										<img
 											src={getImageUrl(ele.productData?.productImages?.[0])}
 											alt={''}
@@ -104,7 +109,11 @@ const ReturnList = (props: ReturnListType) => {
 									</Link>
 								</TableCell>
 								<TableCell>
-									<Link href={{ pathname: '/member', query: { memberId: ele.memberId } }}>
+									<Link
+										href={{ pathname: '/member', query: { memberId: ele.memberId } }}
+										target={'_blank'}
+										rel={'noreferrer'}
+									>
 										{ele.memberData?.memberNick}
 									</Link>
 								</TableCell>

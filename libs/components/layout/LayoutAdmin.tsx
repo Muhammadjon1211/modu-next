@@ -27,7 +27,7 @@ const withAdminLayout = (Component: any) => {
 
 		useEffect(() => {
 			if (!loading && user.memberType !== MemberType.ADMIN) {
-				router.push('/').then();
+				router.replace('/_admin/login').then();
 			}
 		}, [loading, user, router]);
 
@@ -51,7 +51,7 @@ const withAdminLayout = (Component: any) => {
 							<Stack className={'admin-user'}>
 								<Avatar src={getMemberImage(user.memberImage)} />
 								<strong>{user.memberNick}</strong>
-								<Button size={'small'} variant={'outlined'} onClick={() => logOut()}>
+								<Button size={'small'} variant={'outlined'} onClick={() => logOut('/_admin/login')}>
 									Logout
 								</Button>
 							</Stack>
@@ -68,7 +68,7 @@ const withAdminLayout = (Component: any) => {
 						anchor="left"
 						className={'admin-drawer'}
 					>
-						<Link href={'/'} className={'admin-logo'}>
+						<Link href={'/_admin'} className={'admin-logo'}>
 							<img src={'/img/logo/logo.svg'} alt={'modu'} />
 							<span>admin</span>
 						</Link>

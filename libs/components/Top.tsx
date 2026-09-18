@@ -142,9 +142,7 @@ const Top = () => {
 							</MenuItem>
 						)}
 						{user.memberType === MemberType.ADMIN && (
-							<MenuItem onClick={() => router.push('/_admin/users').then(() => setUserAnchor(null))}>
-								{t('Admin')}
-							</MenuItem>
+							<MenuItem onClick={() => router.push('/_admin').then(() => setUserAnchor(null))}>{t('Admin')}</MenuItem>
 						)}
 						<Divider />
 						<MenuItem onClick={() => logOut()}>{t('Logout')}</MenuItem>
@@ -202,7 +200,7 @@ const Top = () => {
 								</Link>
 							))}
 							{user?._id && <Link href={'/mypage'}>{t('My page')}</Link>}
-							{user?.memberType === MemberType.ADMIN && <Link href={'/_admin/users'}>{t('Admin')}</Link>}
+							{user?.memberType === MemberType.ADMIN && <Link href={'/_admin'}>{t('Admin')}</Link>}
 						</Stack>
 						<Stack className={'drawer-langs'}>
 							{languages.map((lang) => (

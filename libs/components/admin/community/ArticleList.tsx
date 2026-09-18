@@ -90,7 +90,11 @@ const ArticleList = (props: ArticleListType) => {
 							<TableRow key={article._id} hover>
 								<TableCell className={'cell-title'}>
 									{article.articleStatus === BoardArticleStatus.ACTIVE ? (
-										<Link href={{ pathname: '/community/detail', query: { id: article._id } }}>
+										<Link
+											href={{ pathname: '/community/detail', query: { id: article._id } }}
+											target={'_blank'}
+											rel={'noreferrer'}
+										>
 											{article.articleTitle}
 										</Link>
 									) : (
@@ -99,7 +103,11 @@ const ArticleList = (props: ArticleListType) => {
 								</TableCell>
 								<TableCell>{articleCategoryLabels[article.articleCategory]}</TableCell>
 								<TableCell>
-									<Link href={{ pathname: '/member', query: { memberId: article.memberId } }}>
+									<Link
+										href={{ pathname: '/member', query: { memberId: article.memberId } }}
+										target={'_blank'}
+										rel={'noreferrer'}
+									>
 										{article.memberData?.memberNick}
 									</Link>
 								</TableCell>

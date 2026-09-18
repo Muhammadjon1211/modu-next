@@ -26,7 +26,7 @@ export const logIn = async (nick: string, password: string): Promise<void> => {
 		}
 	} catch (err) {
 		console.warn('login err', err);
-		logOut();
+		clearSession();
 		throw new Error('Login Err');
 	}
 };
@@ -78,7 +78,7 @@ export const signUp = async (nick: string, password: string, phone: string, type
 		}
 	} catch (err) {
 		console.warn('signup err', err);
-		logOut();
+		clearSession();
 		throw new Error('Signup Err');
 	}
 };
@@ -142,10 +142,17 @@ export const updateUserInfo = (jwtToken: any) => {
 	});
 };
 
-export const logOut = () => {
+/** a full page load after logout, so no cached query from the old session survives */
+export const logOut = (redirect?: string) => {
+	clearSession();
+	if (redirect) window.location.href = redirect;
+	else window.location.reload();
+};
+
+/** drops the token and the user without navigating — used when a login is not allowed in */
+export const clearSession = () => {
 	deleteStorage();
 	deleteUserInfo();
-	window.location.reload();
 };
 
 const deleteStorage = () => {

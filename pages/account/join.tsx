@@ -9,6 +9,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { logIn, signUp } from '../../libs/auth';
+import { userVar } from '../../apollo/store';
 import { MemberType } from '../../libs/enums/member.enum';
 import { Messages } from '../../libs/config';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
@@ -50,7 +51,9 @@ const Join: NextPage = () => {
 			if (!input.nick || !input.password) throw new Error(Messages.error3);
 			setSubmitting(true);
 			await logIn(input.nick, input.password);
-			await router.push((router.query?.back as string) ?? '/');
+			// admins work in their own interface, not the storefront
+			if (userVar().memberType === MemberType.ADMIN) await router.push('/_admin');
+			else await router.push((router.query?.back as string) ?? '/');
 		} catch (err: any) {
 			if (err.message === Messages.error3) sweetMixinErrorAlert(t(err.message)).then();
 		} finally {
