@@ -148,15 +148,20 @@
 				margin-top: 8px;
 
 				> a,
-				> button:not(.like-btn) {
+				> button:not(.like-btn):not(.share-btn) {
 					flex: 1;
 				}
 
-				.like-btn {
+				.like-btn,
+				.share-btn {
 					width: 52px;
 					height: 52px;
 					border: 1px solid #e4e4e4;
 					color: #111111;
+
+					&:hover {
+						border-color: #111111;
+					}
 
 					&.liked {
 						color: #ff4d2e;

@@ -4,6 +4,7 @@ import imageCompression from 'browser-image-compression';
 import { CURRENCY, Messages, REACT_APP_API_URL } from './config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from './sweetAlert';
 import { Message } from './enums/common.enum';
+import { Product } from './types/product/product';
 
 export const formatterStr = (value: number | undefined): string => {
 	return new Intl.NumberFormat('en-US').format(Math.round(value ?? 0));
@@ -58,40 +59,72 @@ export const prepareImages = async (files: FileList | File[]): Promise<File[]> =
  *    SHARED HANDLERS     *
  *************************/
 
-export const likeTargetProductHandler = async (likeTargetProduct: any, id: string, userId: string) => {
+/**
+ * Likes answer silently: the heart itself is the feedback, so only a failure shows a toast.
+ * Each returns whether the server accepted the toggle, so an optimistic UI can undo on false.
+ */
+const likeTarget = async (mutation: any, id: string, userId: string, label: string): Promise<boolean> => {
 	try {
-		if (!id) return;
+		if (!id) return false;
 		if (!userId) throw new Error(Message.NOT_AUTHENTICATED);
-		await likeTargetProduct({ variables: { input: id } });
-		await sweetTopSmallSuccessAlert('success', 800);
+		await mutation({ variables: { input: id } });
+		return true;
 	} catch (err: any) {
-		console.log('ERROR, likeTargetProductHandler:', err.message);
+		console.log(`ERROR, ${label}:`, err.message);
 		sweetMixinErrorAlert(err.message).then();
+		return false;
 	}
 };
 
-export const likeTargetBoardArticleHandler = async (likeTargetBoardArticle: any, id: string, userId: string) => {
-	try {
-		if (!id) return;
-		if (!userId) throw new Error(Message.NOT_AUTHENTICATED);
-		await likeTargetBoardArticle({ variables: { input: id } });
-		await sweetTopSmallSuccessAlert('success', 800);
-	} catch (err: any) {
-		console.log('ERROR, likeTargetBoardArticleHandler:', err.message);
-		sweetMixinErrorAlert(err.message).then();
-	}
+export const likeTargetProductHandler = (likeTargetProduct: any, id: string, userId: string) =>
+	likeTarget(likeTargetProduct, id, userId, 'likeTargetProductHandler');
+
+export const likeTargetBoardArticleHandler = (likeTargetBoardArticle: any, id: string, userId: string) =>
+	likeTarget(likeTargetBoardArticle, id, userId, 'likeTargetBoardArticleHandler');
+
+export const likeTargetMemberHandler = (likeTargetMember: any, id: string, userId: string) =>
+	likeTarget(likeTargetMember, id, userId, 'likeTargetMemberHandler');
+
+/** the product as it will look once the like toggles — flipped locally, before the server answers */
+export const toggleProductLike = (product: Product): Product => {
+	const liked = !!product?.meLiked?.[0]?.myFavorite;
+	return {
+		...product,
+		productLikes: Math.max(0, (product.productLikes ?? 0) + (liked ? -1 : 1)),
+		meLiked: liked ? [] : [{ memberId: '', likeRefId: product._id, myFavorite: true }],
+	};
 };
 
-export const likeTargetMemberHandler = async (likeTargetMember: any, id: string, userId: string) => {
-	try {
-		if (!id) return;
-		if (!userId) throw new Error(Message.NOT_AUTHENTICATED);
-		await likeTargetMember({ variables: { input: id } });
-		await sweetTopSmallSuccessAlert('success', 800);
-	} catch (err: any) {
-		console.log('ERROR, likeTargetMemberHandler:', err.message);
-		sweetMixinErrorAlert(err.message).then();
+/**
+ * Shares a link through the phone's share sheet, or copies it where there is none.
+ * Returns 'shared', 'copied' or 'cancelled' so the caller can say the right thing.
+ */
+export const shareLink = async (url: string, title: string): Promise<'shared' | 'copied' | 'cancelled'> => {
+	if (typeof navigator !== 'undefined' && navigator.share) {
+		try {
+			await navigator.share({ title, url });
+			return 'shared';
+		} catch (err: any) {
+			if (err?.name === 'AbortError') return 'cancelled';
+			// any other failure falls through to copying
+		}
 	}
+
+	// the async clipboard API only exists on https / localhost; the textarea path works everywhere
+	if (typeof navigator !== 'undefined' && navigator.clipboard && window.isSecureContext) {
+		await navigator.clipboard.writeText(url);
+		return 'copied';
+	}
+	const field = document.createElement('textarea');
+	field.value = url;
+	field.setAttribute('readonly', '');
+	field.style.position = 'fixed';
+	field.style.opacity = '0';
+	document.body.appendChild(field);
+	field.select();
+	document.execCommand('copy');
+	document.body.removeChild(field);
+	return 'copied';
 };
 
 export const subscribeHandler = async (subscribe: any, id: string, userId: string) => {

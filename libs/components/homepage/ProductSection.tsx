@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
-import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Skeleton, Stack } from '@mui/material';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
@@ -9,10 +9,8 @@ import ProductCard from '../common/ProductCard';
 import { Product } from '../../types/product/product';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { GET_PRODUCTS } from '../../../apollo/user/query';
-import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
-import { userVar } from '../../../apollo/store';
-import { likeTargetProductHandler } from '../../utils';
 import { T } from '../../types/common';
+import useProductLike from '../../hooks/useProductLike';
 
 interface ProductSectionType {
 	title: string;
@@ -24,13 +22,10 @@ const ProductSection = (props: ProductSectionType) => {
 	const { title, input, className = '' } = props;
 	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
-	const user = useReactiveVar(userVar);
 	const [products, setProducts] = useState<Product[]>([]);
 
 	/** APOLLO REQUESTS **/
-	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
-
-	const { loading, refetch } = useQuery(GET_PRODUCTS, {
+	const { loading } = useQuery(GET_PRODUCTS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input },
 		notifyOnNetworkStatusChange: true,
@@ -40,10 +35,7 @@ const ProductSection = (props: ProductSectionType) => {
 	});
 
 	/** HANDLERS **/
-	const likeProductHandler = async (id: string) => {
-		await likeTargetProductHandler(likeTargetProduct, id, user?._id);
-		await refetch({ input });
-	};
+	const likeProductHandler = useProductLike(setProducts);
 
 	if (!loading && !products.length) return null;
 

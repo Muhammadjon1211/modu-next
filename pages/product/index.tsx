@@ -2,7 +2,7 @@ import React, { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Button, Drawer, InputBase, MenuItem, Pagination, Select, Skeleton, Stack } from '@mui/material';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
@@ -14,12 +14,10 @@ import ProductCard from '../../libs/components/common/ProductCard';
 import { Product } from '../../libs/types/product/product';
 import { ProductsInquiry } from '../../libs/types/product/product.input';
 import { GET_PRODUCTS } from '../../apollo/user/query';
-import { LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
-import { userVar } from '../../apollo/store';
-import { likeTargetProductHandler } from '../../libs/utils';
 import { productSortOptions } from '../../libs/config';
 import { Direction } from '../../libs/enums/common.enum';
 import { T } from '../../libs/types/common';
+import useProductLike from '../../libs/hooks/useProductLike';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -43,7 +41,6 @@ const ProductList: NextPage<ProductListType> = ({ initialInput = defaultInput })
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
-	const user = useReactiveVar(userVar);
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
@@ -53,9 +50,7 @@ const ProductList: NextPage<ProductListType> = ({ initialInput = defaultInput })
 	const [filterOpen, setFilterOpen] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
-	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
-
-	const { loading, refetch } = useQuery(GET_PRODUCTS, {
+	const { loading } = useQuery(GET_PRODUCTS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
@@ -101,10 +96,7 @@ const ProductList: NextPage<ProductListType> = ({ initialInput = defaultInput })
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 	};
 
-	const likeProductHandler = async (id: string) => {
-		await likeTargetProductHandler(likeTargetProduct, id, user?._id);
-		await refetch({ input: searchFilter });
-	};
+	const likeProductHandler = useProductLike(setProducts);
 
 	const sortIndex = Math.max(
 		0,

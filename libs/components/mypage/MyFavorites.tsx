@@ -1,15 +1,13 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Pagination, Stack } from '@mui/material';
 import ProductCard from '../common/ProductCard';
 import { Product } from '../../types/product/product';
 import { OrdinaryInquiry } from '../../types/member/member.input';
 import { GET_FAVORITES, GET_VISITED } from '../../../apollo/user/query';
-import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
-import { userVar } from '../../../apollo/store';
-import { likeTargetProductHandler } from '../../utils';
 import { T } from '../../types/common';
+import useProductLike from '../../hooks/useProductLike';
 
 interface MyFavoritesType {
 	visited?: boolean;
@@ -19,15 +17,12 @@ interface MyFavoritesType {
 const MyFavorites = (props: MyFavoritesType) => {
 	const { visited = false } = props;
 	const { t } = useTranslation('common');
-	const user = useReactiveVar(userVar);
 	const [products, setProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [searchFilter, setSearchFilter] = useState<OrdinaryInquiry>({ page: 1, limit: 9 });
 
 	/** APOLLO REQUESTS **/
-	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
-
-	const { loading, refetch } = useQuery(visited ? GET_VISITED : GET_FAVORITES, {
+	const { loading } = useQuery(visited ? GET_VISITED : GET_FAVORITES, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
@@ -39,10 +34,7 @@ const MyFavorites = (props: MyFavoritesType) => {
 	});
 
 	/** HANDLERS **/
-	const likeProductHandler = async (id: string) => {
-		await likeTargetProductHandler(likeTargetProduct, id, user?._id);
-		await refetch({ input: searchFilter });
-	};
+	const likeProductHandler = useProductLike(setProducts, { removeOnUnlike: true });
 
 	const handlePaginationChange = (event: ChangeEvent<unknown>, value: number) => {
 		setSearchFilter({ ...searchFilter, page: value });

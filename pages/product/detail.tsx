@@ -14,12 +14,14 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import IosShareRoundedIcon from '@mui/icons-material/IosShareRounded';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
 import ProductGallery from '../../libs/components/product/ProductGallery';
 import RelatedProducts from '../../libs/components/product/RelatedProducts';
 import CommentList from '../../libs/components/common/CommentList';
+import Seo, { SeoProps } from '../../libs/components/common/Seo';
 import { Product } from '../../libs/types/product/product';
 import { GET_PRODUCT } from '../../apollo/user/query';
 import { ADD_TO_CART, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
@@ -37,17 +39,36 @@ import {
 	RETURN_WINDOW_DAYS,
 	seasonLabels,
 } from '../../libs/config';
-import { formatPrice, formatterStr, getMemberImage, likeTargetProductHandler, salePrice } from '../../libs/utils';
+import {
+	formatPrice,
+	formatterStr,
+	getMemberImage,
+	likeTargetProductHandler,
+	salePrice,
+	shareLink,
+	toggleProductLike,
+} from '../../libs/utils';
+import { fetchProductSeo } from '../../libs/seo';
 import { sweetLoginConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { T } from '../../libs/types/common';
 
-export const getStaticProps = async ({ locale }: any) => ({
-	props: {
-		...(await serverSideTranslations(locale, ['common'])),
-	},
-});
+/**
+ * Rendered on the server so a shared link carries this product's title, price and photo —
+ * messengers read the preview tags from the first HTML and never run the page's JavaScript.
+ */
+export const getServerSideProps = async ({ locale, query }: any) => {
+	const [translations, seo] = await Promise.all([
+		serverSideTranslations(locale, ['common']),
+		fetchProductSeo(query?.id),
+	]);
+	return { props: { ...translations, seo } };
+};
 
-const ProductDetail: NextPage = () => {
+interface ProductDetailProps {
+	seo: SeoProps | null;
+}
+
+const ProductDetail: NextPage<ProductDetailProps> = ({ seo }) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
@@ -60,7 +81,8 @@ const ProductDetail: NextPage = () => {
 	const [adding, setAdding] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
-	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
+	// no-cache: the answer must not overwrite the optimistic heart through the cached product
+	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT, { fetchPolicy: 'no-cache' });
 	const [addToCart] = useMutation(ADD_TO_CART);
 
 	const { loading, refetch } = useQuery(GET_PRODUCT, {
@@ -99,10 +121,23 @@ const ProductDetail: NextPage = () => {
 		document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	};
 
+	// the heart flips at once; the server call follows, and a failure flips it back
 	const likeProductHandler = async () => {
 		if (!product) return;
-		await likeTargetProductHandler(likeTargetProduct, product._id, user?._id);
-		await refetch({ input: productId });
+		if (!user?._id) {
+			await likeTargetProductHandler(likeTargetProduct, product._id, user?._id);
+			return;
+		}
+		setProduct((current) => (current ? toggleProductLike(current) : current));
+		const saved = await likeTargetProductHandler(likeTargetProduct, product._id, user._id);
+		if (!saved) setProduct((current) => (current ? toggleProductLike(current) : current));
+	};
+
+	const shareHandler = async () => {
+		if (!product) return;
+		// the page's own address, so the link opens in the viewer's language too
+		const result = await shareLink(window.location.href, product.productTitle);
+		if (result === 'copied') await sweetTopSmallSuccessAlert(t('Link copied'), 1500);
 	};
 
 	const addToCartHandler = async (goToCart: boolean) => {
@@ -142,6 +177,7 @@ const ProductDetail: NextPage = () => {
 	if (!product) {
 		return (
 			<div id="product-detail-page">
+				<Seo {...(seo ?? { path: `/product/detail?id=${productId}` })} />
 				<Stack className={'loading-box'}>
 					{loading || !productId ? (
 						<CircularProgress color={'inherit'} />
@@ -281,8 +317,11 @@ const ProductDetail: NextPage = () => {
 						</Button>
 					</>
 				)}
-				<IconButton className={`like-btn ${liked ? 'liked' : ''}`} onClick={likeProductHandler}>
+				<IconButton className={`like-btn ${liked ? 'liked' : ''}`} aria-label={t('Like')} onClick={likeProductHandler}>
 					{liked ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
+				</IconButton>
+				<IconButton className={'share-btn'} aria-label={t('Share')} onClick={shareHandler}>
+					<IosShareRoundedIcon />
 				</IconButton>
 			</Stack>
 
@@ -370,6 +409,7 @@ const ProductDetail: NextPage = () => {
 	if (device === 'mobile') {
 		return (
 			<div id="product-detail-page">
+				<Seo {...(seo ?? { path: `/product/detail?id=${productId}` })} />
 				<Stack className={'back-row'}>{backBar}</Stack>
 				<ProductGallery images={product.productImages} title={product.productTitle} />
 				{buyBox}
@@ -381,6 +421,7 @@ const ProductDetail: NextPage = () => {
 	} else {
 		return (
 			<div id="product-detail-page">
+				<Seo {...(seo ?? { path: `/product/detail?id=${productId}` })} />
 				<Stack className={'container'}>
 					{backBar}
 					<Stack className={'detail-top'}>

@@ -7,6 +7,8 @@ const nextConfig = {
 		REACT_APP_API_URL: process.env.REACT_APP_API_URL,
 		REACT_APP_API_GRAPHQL_URL: process.env.REACT_APP_API_GRAPHQL_URL,
 		REACT_APP_API_WS: process.env.REACT_APP_API_WS,
+		// the site's own public address, for absolute URLs in link previews
+		REACT_APP_SITE_URL: process.env.REACT_APP_SITE_URL,
 	},
 	i18n,
 	// "Sellers" became "Shops" — old links still land on the right page

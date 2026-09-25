@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { Skeleton, Stack } from '@mui/material';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import ProductCard from '../common/ProductCard';
 import { Product } from '../../types/product/product';
 import { GET_RECOMMENDATIONS } from '../../../apollo/user/query';
-import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 import { userVar } from '../../../apollo/store';
-import { likeTargetProductHandler } from '../../utils';
 import { T } from '../../types/common';
+import useProductLike from '../../hooks/useProductLike';
 
 interface RecommendedSectionType {
 	limit?: number;
@@ -28,8 +27,6 @@ const RecommendedSection = (props: RecommendedSectionType) => {
 	const firstRender = useRef<boolean>(true);
 
 	/** APOLLO REQUESTS **/
-	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
-
 	const { loading, refetch } = useQuery(GET_RECOMMENDATIONS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { limit },
@@ -51,10 +48,7 @@ const RecommendedSection = (props: RecommendedSectionType) => {
 	}, [user?._id]);
 
 	/** HANDLERS **/
-	const likeProductHandler = async (id: string) => {
-		await likeTargetProductHandler(likeTargetProduct, id, user?._id);
-		await refetch({ limit });
-	};
+	const likeProductHandler = useProductLike(setProducts);
 
 	if (!loading && !products.length) return null;
 
