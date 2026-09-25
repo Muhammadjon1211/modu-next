@@ -259,6 +259,9 @@
 							-webkit-background-clip: text;
 							background-clip: text;
 							color: transparent;
+							// room for descenders under clipped text — see the pc hero
+							padding-bottom: 0.18em;
+							margin-bottom: -0.18em;
 							animation:
 								rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
 								shimmer 6s ease-in-out 1.2s infinite alternate;
