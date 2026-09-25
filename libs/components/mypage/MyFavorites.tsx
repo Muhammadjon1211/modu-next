@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useQuery } from '@apollo/client';
 import { Pagination, Stack } from '@mui/material';
 import ProductCard from '../common/ProductCard';
+import FavoriteRow from './FavoriteRow';
 import { Product } from '../../types/product/product';
 import { OrdinaryInquiry } from '../../types/member/member.input';
 import { GET_FAVORITES, GET_VISITED } from '../../../apollo/user/query';
@@ -43,16 +44,16 @@ const MyFavorites = (props: MyFavoritesType) => {
 	return (
 		<Stack className={'my-favorites'}>
 			<h2 className={'my-title'}>{visited ? t('Recently viewed') : t('Favorites')}</h2>
-			<Stack className={'product-grid'}>
+			{/* favorites read as a list to act on; recently viewed stays a browsing grid */}
+			<Stack className={visited ? 'product-grid' : 'favorite-list'}>
 				{products.length ? (
-					products.map((product) => (
-						<ProductCard
-							key={product._id}
-							product={product}
-							myFavorites={!visited}
-							likeProductHandler={visited ? undefined : likeProductHandler}
-						/>
-					))
+					products.map((product) =>
+						visited ? (
+							<ProductCard key={product._id} product={product} />
+						) : (
+							<FavoriteRow key={product._id} product={product} unlikeHandler={likeProductHandler} />
+						),
+					)
 				) : loading ? null : (
 					<div className={'no-data'}>
 						<img src="/img/icons/icoAlert.svg" alt="" />

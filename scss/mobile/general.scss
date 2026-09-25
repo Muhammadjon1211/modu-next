@@ -758,6 +758,37 @@
 			}
 		}
 
+		.favorite-row {
+			gap: 12px;
+			padding: 10px;
+			border-radius: 16px;
+
+			.row-img {
+				width: 76px;
+			}
+
+			.row-info {
+				.title {
+					font-size: 14px;
+				}
+
+				.price-row strong {
+					font-size: 15px;
+				}
+			}
+
+			// stacked, so the title keeps the width
+			.row-actions {
+				flex-direction: column;
+
+				.unlike-btn,
+				.open-btn {
+					width: 36px;
+					height: 36px;
+				}
+			}
+		}
+
 		.order-card {
 			.order-line {
 				flex-wrap: wrap;
