@@ -108,6 +108,22 @@
 				background: #ff4d2e;
 				color: #ffffff;
 			}
+
+			// a personal pick sits bottom-left so it never collides with the sale tag
+			&.ai {
+				top: auto;
+				bottom: 12px;
+				display: inline-flex;
+				align-items: center;
+				gap: 4px;
+				background: linear-gradient(135deg, #6d4aff, #b44cff);
+				color: #ffffff;
+				box-shadow: 0 4px 12px rgba(109, 74, 255, 0.35);
+
+				svg {
+					font-size: 14px;
+				}
+			}
 		}
 
 		.sold-out {
@@ -127,8 +143,15 @@
 			position: absolute;
 			top: 10px;
 			right: 10px;
-			width: 36px;
+			display: inline-flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			gap: 4px;
+			min-width: 36px;
 			height: 36px;
+			padding: 0 10px;
+			border-radius: 999px;
 			background: rgba(255, 255, 255, 0.92);
 			color: #111111;
 			backdrop-filter: blur(4px);
@@ -137,12 +160,26 @@
 				font-size: 20px;
 			}
 
+			em {
+				font-style: normal;
+				font-size: 12px;
+				font-weight: 700;
+				line-height: 1;
+				color: #111111;
+			}
+
 			&:hover {
 				background: #ffffff;
 			}
 
 			&.liked {
 				color: #ff4d2e;
+			}
+
+			// cards without a like handler show the count only — no button affordance
+			&.static {
+				color: #ff4d2e;
+				pointer-events: none;
 			}
 		}
 

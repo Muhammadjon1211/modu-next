@@ -7,6 +7,7 @@ import withLayoutHome from '../libs/components/layout/LayoutHome';
 import HeroBanner from '../libs/components/homepage/HeroBanner';
 import CategoryStrip from '../libs/components/homepage/CategoryStrip';
 import ProductSection from '../libs/components/homepage/ProductSection';
+import RecommendedSection from '../libs/components/homepage/RecommendedSection';
 import TopSellers from '../libs/components/homepage/TopSellers';
 import CommunityPreview from '../libs/components/homepage/CommunityPreview';
 import Reveal from '../libs/components/common/Reveal';
@@ -39,6 +40,9 @@ const Home: NextPage = () => {
 					<CategoryStrip />
 				</Reveal>
 				<Reveal>
+					<RecommendedSection />
+				</Reveal>
+				<Reveal>
 					<ProductSection title={'New arrivals'} input={newArrivals} />
 				</Reveal>
 				<Reveal>
@@ -61,6 +65,9 @@ const Home: NextPage = () => {
 				<HeroBanner />
 				<Reveal>
 					<CategoryStrip />
+				</Reveal>
+				<Reveal>
+					<RecommendedSection />
 				</Reveal>
 				<Reveal>
 					<ProductSection title={'New arrivals'} input={newArrivals} />

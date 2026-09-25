@@ -498,3 +498,15 @@
 		transition: none;
 	}
 }
+
+/* the personal-picks heading — shared by pc and mobile */
+.product-section.recommended .section-head h2 {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+
+	.ai-icon {
+		color: #8a4bff;
+		font-size: 0.9em;
+	}
+}

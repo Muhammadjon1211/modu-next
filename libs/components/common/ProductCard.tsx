@@ -5,6 +5,7 @@ import { IconButton, Stack } from '@mui/material';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import { Product } from '../../types/product/product';
 import { ProductStatus } from '../../enums/product.enum';
 import { formatPrice, formatterStr, getImageUrl, imageFallbackHandler, salePrice } from '../../utils';
@@ -33,16 +34,29 @@ const ProductCard = (props: ProductCardType) => {
 					loading={'lazy'}
 				/>
 				{product?.productDiscount > 0 && <span className={'badge sale'}>-{product.productDiscount}%</span>}
+				{product?.meRecommended && (
+					<span className={'badge ai'}>
+						<AutoAwesomeRoundedIcon /> {t('AI pick')}
+					</span>
+				)}
 				{soldOut && <span className={'sold-out'}>{t('Sold out')}</span>}
 			</Link>
-			{likeProductHandler && (
+			{likeProductHandler ? (
 				<IconButton
 					className={`like-btn ${liked ? 'liked' : ''}`}
 					aria-label={'like'}
 					onClick={() => likeProductHandler(product?._id)}
 				>
 					{liked ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
+					{product?.productLikes > 0 && <em>{formatterStr(product.productLikes)}</em>}
 				</IconButton>
+			) : (
+				product?.productLikes > 0 && (
+					<span className={'like-btn static'}>
+						<FavoriteRoundedIcon />
+						<em>{formatterStr(product.productLikes)}</em>
+					</span>
+				)
 			)}
 			<Stack className={'card-info'}>
 				<Stack className={'brand-row'}>

@@ -127,6 +127,7 @@ export const GET_PRODUCTS = gql`
 					likeRefId
 					myFavorite
 				}
+				meRecommended
 			}
 			metaCounter {
 				total
@@ -214,10 +215,52 @@ export const GET_RELATED_PRODUCTS = gql`
 					memberNick
 					memberShopName
 				}
+				meRecommended
 			}
 			metaCounter {
 				total
 			}
+		}
+	}
+`;
+
+export const GET_RECOMMENDATIONS = gql`
+	query GetRecommendations($limit: Int) {
+		getRecommendations(limit: $limit) {
+			list {
+				_id
+				productCategory
+				productGroup
+				productStatus
+				productGender
+				productBrand
+				productTitle
+				productPrice
+				productDiscount
+				productStock
+				productImages
+				productOnSale
+				productFreeShipping
+				productViews
+				productLikes
+				productSales
+				productRating
+				productRatingCount
+				memberId
+				createdAt
+				memberData {
+					_id
+					memberNick
+					memberShopName
+				}
+				meLiked {
+					memberId
+					likeRefId
+					myFavorite
+				}
+				meRecommended
+			}
+			personalized
 		}
 	}
 `;

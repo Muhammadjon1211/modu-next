@@ -46,6 +46,12 @@ export interface Product {
 	/** from aggregation **/
 	memberData?: Member;
 	meLiked?: MeLiked[];
+	meRecommended?: boolean;
+}
+
+export interface Recommendations {
+	list: Product[];
+	personalized: boolean;
 }
 
 export interface Products {
