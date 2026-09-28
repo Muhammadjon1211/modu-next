@@ -47,6 +47,7 @@ export interface Product {
 	memberData?: Member;
 	meLiked?: MeLiked[];
 	meRecommended?: boolean;
+	productTryOn?: boolean;
 }
 
 export interface Recommendations {

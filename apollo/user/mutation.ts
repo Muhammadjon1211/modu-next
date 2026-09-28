@@ -75,6 +75,15 @@ export const IMAGE_UPLOADER = gql`
 	}
 `;
 
+export const TRY_ON_PRODUCT = gql`
+	mutation TryOnProduct($productId: String!, $file: Upload!) {
+		tryOnProduct(productId: $productId, file: $file) {
+			image
+			remaining
+		}
+	}
+`;
+
 export const IMAGES_UPLOADER = gql`
 	mutation ImagesUploader($files: [Upload!]!, $target: String!) {
 		imagesUploader(files: $files, target: $target)

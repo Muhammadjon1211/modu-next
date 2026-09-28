@@ -141,6 +141,7 @@ export const GET_PRODUCT = gql`
 		getProduct(productId: $input) {
 			_id
 			productCategory
+			productTryOn
 			productGroup
 			productStatus
 			productGender

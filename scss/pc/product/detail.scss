@@ -148,12 +148,13 @@
 				margin-top: 8px;
 
 				> a,
-				> button:not(.like-btn):not(.share-btn) {
+				> button:not(.like-btn):not(.share-btn):not(.tryon-btn) {
 					flex: 1;
 				}
 
 				.like-btn,
-				.share-btn {
+				.share-btn,
+				.tryon-btn {
 					width: 52px;
 					height: 52px;
 					border: 1px solid #e4e4e4;
@@ -167,6 +168,18 @@
 						color: #ff4d2e;
 						border-color: #ffd3c9;
 						background: #fff5f2;
+					}
+				}
+
+				// the AI pick badge's gradient marks the AI feature
+				.tryon-btn {
+					border: none;
+					color: #ffffff;
+					background: linear-gradient(135deg, #6d4aff, #b44cff);
+					box-shadow: 0 6px 18px rgba(109, 74, 255, 0.28);
+
+					&:hover {
+						background: linear-gradient(135deg, #5a38f0, #a23bf0);
 					}
 				}
 			}

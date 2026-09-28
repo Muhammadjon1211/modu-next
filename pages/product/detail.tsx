@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { Avatar, Button, CircularProgress, IconButton, Rating, Stack } from '@mui/material';
+import { Avatar, Button, CircularProgress, IconButton, Rating, Stack, Tooltip } from '@mui/material';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
@@ -15,11 +15,13 @@ import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOu
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import IosShareRoundedIcon from '@mui/icons-material/IosShareRounded';
+import CheckroomRoundedIcon from '@mui/icons-material/CheckroomRounded';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
 import ProductGallery from '../../libs/components/product/ProductGallery';
 import RelatedProducts from '../../libs/components/product/RelatedProducts';
+import TryOnDialog from '../../libs/components/product/TryOnDialog';
 import CommentList from '../../libs/components/common/CommentList';
 import Seo, { SeoProps } from '../../libs/components/common/Seo';
 import { Product } from '../../libs/types/product/product';
@@ -79,6 +81,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ seo }) => {
 	const [size, setSize] = useState<ProductSize | ''>('');
 	const [color, setColor] = useState<ProductColor | ''>('');
 	const [adding, setAdding] = useState<boolean>(false);
+	const [tryOnOpen, setTryOnOpen] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
 	// no-cache: the answer must not overwrite the optimistic heart through the cached product
@@ -138,6 +141,15 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ seo }) => {
 		// the page's own address, so the link opens in the viewer's language too
 		const result = await shareLink(window.location.href, product.productTitle);
 		if (result === 'copied') await sweetTopSmallSuccessAlert(t('Link copied'), 1500);
+	};
+
+	// every run spends the shared free GPU quota, so it is for members only
+	const tryOnHandler = async () => {
+		if (!user?._id) {
+			if (await sweetLoginConfirmAlert(t('Please login first!'))) await router.push('/account/join');
+			return;
+		}
+		setTryOnOpen(true);
 	};
 
 	const addToCartHandler = async (goToCart: boolean) => {
@@ -323,6 +335,13 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ seo }) => {
 				<IconButton className={'share-btn'} aria-label={t('Share')} onClick={shareHandler}>
 					<IosShareRoundedIcon />
 				</IconButton>
+				{product.productTryOn && device !== 'mobile' && (
+					<Tooltip title={t('Try on')}>
+						<IconButton className={'tryon-btn'} aria-label={t('Try on')} onClick={tryOnHandler}>
+							<CheckroomRoundedIcon />
+						</IconButton>
+					</Tooltip>
+				)}
 			</Stack>
 
 			<Stack className={'perks'}>
@@ -411,11 +430,21 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ seo }) => {
 			<div id="product-detail-page">
 				<Seo {...(seo ?? { path: `/product/detail?id=${productId}` })} />
 				<Stack className={'back-row'}>{backBar}</Stack>
-				<ProductGallery images={product.productImages} title={product.productTitle} />
+				<Stack className={'gallery-wrap'}>
+					<ProductGallery images={product.productImages} title={product.productTitle} />
+					{/* no room for a third icon beside the buy buttons on a phone */}
+					{product.productTryOn && (
+						<button type={'button'} className={'tryon-fab'} onClick={tryOnHandler}>
+							<CheckroomRoundedIcon />
+							{t('Try on')}
+						</button>
+					)}
+				</Stack>
 				{buyBox}
 				{details}
 				{reviews}
 				<RelatedProducts productId={product._id} />
+				<TryOnDialog product={product} open={tryOnOpen} onClose={() => setTryOnOpen(false)} />
 			</div>
 		);
 	} else {
@@ -440,6 +469,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ seo }) => {
 					</Stack>
 					<RelatedProducts productId={product._id} />
 				</Stack>
+				<TryOnDialog product={product} open={tryOnOpen} onClose={() => setTryOnOpen(false)} />
 			</div>
 		);
 	}
