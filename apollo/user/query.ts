@@ -4,6 +4,16 @@ import { gql } from '@apollo/client';
  *         MEMBER         *
  *************************/
 
+export const GET_AUTH_PROVIDERS = gql`
+	query GetAuthProviders {
+		getAuthProviders {
+			googleClientId
+			kakaoClientId
+			telegramBotId
+		}
+	}
+`;
+
 export const GET_SELLERS = gql`
 	query GetSellers($input: SellersInquiry!) {
 		getSellers(input: $input) {

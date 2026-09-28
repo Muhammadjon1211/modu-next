@@ -8,6 +8,7 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
+import SocialLogin from '../../libs/components/common/SocialLogin';
 import { logIn, signUp } from '../../libs/auth';
 import { userVar } from '../../apollo/store';
 import { MemberType } from '../../libs/enums/member.enum';
@@ -46,20 +47,24 @@ const Join: NextPage = () => {
 		setInput((prev) => ({ ...prev, [name]: value }));
 	}, []);
 
+	const afterLogin = useCallback(async () => {
+		// admins work in their own interface, not the storefront
+		if (userVar().memberType === MemberType.ADMIN) await router.push('/_admin');
+		else await router.push((router.query?.back as string) ?? '/');
+	}, [router]);
+
 	const doLogin = useCallback(async () => {
 		try {
 			if (!input.nick || !input.password) throw new Error(Messages.error3);
 			setSubmitting(true);
 			await logIn(input.nick, input.password);
-			// admins work in their own interface, not the storefront
-			if (userVar().memberType === MemberType.ADMIN) await router.push('/_admin');
-			else await router.push((router.query?.back as string) ?? '/');
+			await afterLogin();
 		} catch (err: any) {
 			if (err.message === Messages.error3) sweetMixinErrorAlert(t(err.message)).then();
 		} finally {
 			setSubmitting(false);
 		}
-	}, [input, router, t]);
+	}, [input, afterLogin, t]);
 
 	const doSignUp = useCallback(async () => {
 		try {
@@ -151,6 +156,8 @@ const Join: NextPage = () => {
 			<Button type={'submit'} variant={'contained'} size={'large'} fullWidth disabled={submitting}>
 				{loginView ? t('Login') : t('Create account')}
 			</Button>
+
+			<SocialLogin memberType={loginView ? undefined : input.type} onSuccess={() => afterLogin().then()} />
 		</form>
 	);
 

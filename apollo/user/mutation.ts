@@ -30,6 +30,19 @@ export const LOGIN = gql`
 	}
 `;
 
+export const SOCIAL_LOGIN = gql`
+	mutation SocialLogin($input: SocialLoginInput!) {
+		socialLogin(input: $input) {
+			_id
+			memberType
+			memberStatus
+			memberNick
+			memberImage
+			accessToken
+		}
+	}
+`;
+
 export const UPDATE_MEMBER = gql`
 	mutation UpdateMember($input: MemberUpdate!) {
 		updateMember(input: $input) {

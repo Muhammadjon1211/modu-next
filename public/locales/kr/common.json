@@ -292,5 +292,8 @@
 	"Wrong size": "사이즈 안 맞음",
 	"YELLOW": "옐로우",
 	"You may also like": "함께 보면 좋은 상품",
-	"Your cart is empty": "장바구니가 비어 있어요"
+	"Your cart is empty": "장바구니가 비어 있어요",
+	"or": "또는",
+	"Continue with Kakao": "카카오 로그인",
+	"Continue with Telegram": "텔레그램으로 계속하기"
 }

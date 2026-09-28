@@ -70,10 +70,12 @@ const MyProfile = () => {
 
 	const saveHandler = async () => {
 		try {
-			if (!form.memberNick || !form.memberPhone) throw new Error(t('Please fulfill all inputs!'));
+			if (!form.memberNick) throw new Error(t('Please fulfill all inputs!'));
 
 			const input: T = { ...form };
 			if (password) input.memberPassword = password;
+			// social accounts start without a phone; an empty string would collide on the unique index
+			if (!input.memberPhone) delete input.memberPhone;
 			if (!isSeller) {
 				delete input.memberShopName;
 				delete input.memberShopBanner;

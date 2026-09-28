@@ -292,5 +292,8 @@
 	"Wrong size": "Не подошёл размер",
 	"YELLOW": "Жёлтый",
 	"You may also like": "Вам может понравиться",
-	"Your cart is empty": "Корзина пуста"
+	"Your cart is empty": "Корзина пуста",
+	"or": "или",
+	"Continue with Kakao": "Войти через Kakao",
+	"Continue with Telegram": "Войти через Telegram"
 }

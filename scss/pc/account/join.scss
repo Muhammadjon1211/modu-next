@@ -38,6 +38,65 @@
 		.join-tabs {
 			margin-bottom: 8px;
 		}
+
+		.social-login {
+			gap: 10px;
+			align-items: center;
+
+			.social-divider {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				width: 100%;
+				margin: 4px 0;
+				font-size: 13px;
+				color: #8a8a8a;
+
+				&::before,
+				&::after {
+					content: '';
+					flex: 1;
+					height: 1px;
+					background: #ececec;
+				}
+			}
+
+			.google-button {
+				display: flex;
+				justify-content: center;
+				width: 100%;
+				max-width: 400px;
+				min-height: 44px;
+			}
+
+			.social-button {
+				gap: 8px;
+				max-width: 400px;
+				height: 44px;
+				border-radius: 999px;
+				font-size: 14px;
+				font-weight: 600;
+				text-transform: none;
+
+				&.kakao {
+					background: #fee500;
+					color: rgba(0, 0, 0, 0.85);
+
+					&:hover {
+						background: #f5dc00;
+					}
+				}
+
+				&.telegram {
+					background: #2aabee;
+					color: #ffffff;
+
+					&:hover {
+						background: #229ed9;
+					}
+				}
+			}
+		}
 	}
 }
 

@@ -3,8 +3,9 @@ import { initializeApollo } from '../../apollo/client';
 import { cartCountVar, userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
 import { sweetMixinErrorAlert } from '../sweetAlert';
-import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
+import { LOGIN, SIGN_UP, SOCIAL_LOGIN } from '../../apollo/user/mutation';
 import { Message } from '../enums/common.enum';
+import { MemberAuthType } from '../enums/member.enum';
 
 export function getJwtToken(): any {
 	if (typeof window !== 'undefined') {
@@ -121,6 +122,34 @@ const requestSignUpJwtToken = async ({
 				await sweetMixinErrorAlert(message ?? Message.SOMETHING_WENT_WRONG);
 		}
 		throw new Error('token error');
+	}
+};
+
+export interface SocialLoginRequest {
+	provider: MemberAuthType;
+	credential: string;
+	redirectUri?: string;
+	memberType?: string;
+}
+
+/** Google, Kakao or Telegram — the backend verifies the credential and logs in or creates the account */
+export const socialLogIn = async (request: SocialLoginRequest): Promise<void> => {
+	const apolloClient = await initializeApollo();
+	try {
+		const result = await apolloClient.mutate({
+			mutation: SOCIAL_LOGIN,
+			variables: { input: request },
+			fetchPolicy: 'network-only',
+		});
+		const jwtToken = result?.data?.socialLogin?.accessToken;
+		if (!jwtToken) throw new Error(Message.SOMETHING_WENT_WRONG);
+		updateStorage({ jwtToken });
+		updateUserInfo(jwtToken);
+	} catch (err: any) {
+		console.warn('social login err', err);
+		clearSession();
+		await sweetMixinErrorAlert(err.graphQLErrors?.[0]?.message ?? Message.SOMETHING_WENT_WRONG);
+		throw new Error('Social login Err');
 	}
 };
 
