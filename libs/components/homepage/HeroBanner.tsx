@@ -4,11 +4,13 @@ import { useTranslation } from 'next-i18next';
 import { useQuery } from '@apollo/client';
 import { Button, Stack } from '@mui/material';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import CheckroomRoundedIcon from '@mui/icons-material/CheckroomRounded';
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import BrandTicker from './BrandTicker';
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { Product } from '../../types/product/product';
-import { ProductGroup } from '../../enums/product.enum';
+import { ProductCategory, ProductGroup } from '../../enums/product.enum';
 import { Direction } from '../../enums/common.enum';
 import { formatPrice, getImageUrl, salePrice } from '../../utils';
 import { T } from '../../types/common';
@@ -22,6 +24,15 @@ const saleHref = `/product?input=${JSON.stringify({
 	sort: 'createdAt',
 	direction: 'DESC',
 	search: { options: ['productOnSale'] },
+})}`;
+
+// the categories the AI try-on dresses (upper body only)
+const tryOnHref = `/product?input=${JSON.stringify({
+	page: 1,
+	limit: 12,
+	sort: 'createdAt',
+	direction: 'DESC',
+	search: { categoryList: [ProductCategory.TOP, ProductCategory.OUTERWEAR] },
 })}`;
 
 const newestInput = { page: 1, limit: 12, sort: 'createdAt', direction: Direction.DESC, search: {} };
@@ -87,6 +98,20 @@ const HeroBanner = () => {
 		</>
 	);
 
+	const aiPromo = (
+		<Link href={tryOnHref} className={'hero-ai'}>
+			<span className={'ai-icon'}>
+				<CheckroomRoundedIcon />
+				<AutoAwesomeRoundedIcon className={'spark'} />
+			</span>
+			<span className={'ai-text'}>
+				<strong>{t('AI try on')}</strong>
+				<em>{t('See it on you before you buy')}</em>
+			</span>
+			<ArrowForwardRoundedIcon className={'ai-arrow'} />
+		</Link>
+	);
+
 	const tiles = (
 		<Stack className={'hero-tiles'}>
 			<Link href={groupHref(ProductGroup.CLOTHES)} className={'hero-tile clothes'}>
@@ -120,6 +145,7 @@ const HeroBanner = () => {
 						</Link>
 						{photos}
 					</Stack>
+					{aiPromo}
 					{tiles}
 				</Stack>
 				<BrandTicker products={products} />
@@ -154,6 +180,7 @@ const HeroBanner = () => {
 									</Button>
 								</Link>
 							</Stack>
+							{aiPromo}
 							{photos}
 						</Stack>
 						{tiles}

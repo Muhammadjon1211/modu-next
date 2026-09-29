@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { Avatar, Button, CircularProgress, IconButton, Rating, Stack, Tooltip } from '@mui/material';
+import { Avatar, Button, CircularProgress, IconButton, Rating, Stack } from '@mui/material';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
@@ -222,13 +222,25 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ seo }) => {
 				<Link href={{ pathname: '/member', query: { memberId: product.memberId } }} className={'brand'}>
 					{product.productBrand}
 				</Link>
-				{product.productRatingCount > 0 && (
-					<button type={'button'} className={'rating'} onClick={scrollToReviewsHandler}>
-						<StarRoundedIcon />
-						{product.productRating.toFixed(1)}
-						<em>({product.productRatingCount})</em>
-					</button>
-				)}
+				<Stack className={'top-actions'}>
+					{product.productRatingCount > 0 && (
+						<button type={'button'} className={'rating'} onClick={scrollToReviewsHandler}>
+							<StarRoundedIcon />
+							{product.productRating.toFixed(1)}
+							<em>({product.productRatingCount})</em>
+						</button>
+					)}
+					<IconButton
+						className={`like-btn ${liked ? 'liked' : ''}`}
+						aria-label={t('Like')}
+						onClick={likeProductHandler}
+					>
+						{liked ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
+					</IconButton>
+					<IconButton className={'share-btn'} aria-label={t('Share')} onClick={shareHandler}>
+						<IosShareRoundedIcon />
+					</IconButton>
+				</Stack>
 			</Stack>
 			<h1 className={'title'}>{product.productTitle}</h1>
 			<Stack className={'price'}>
@@ -329,18 +341,16 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ seo }) => {
 						</Button>
 					</>
 				)}
-				<IconButton className={`like-btn ${liked ? 'liked' : ''}`} aria-label={t('Like')} onClick={likeProductHandler}>
-					{liked ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
-				</IconButton>
-				<IconButton className={'share-btn'} aria-label={t('Share')} onClick={shareHandler}>
-					<IosShareRoundedIcon />
-				</IconButton>
 				{product.productTryOn && device !== 'mobile' && (
-					<Tooltip title={t('Try on')}>
-						<IconButton className={'tryon-btn'} aria-label={t('Try on')} onClick={tryOnHandler}>
-							<CheckroomRoundedIcon />
-						</IconButton>
-					</Tooltip>
+					<Button
+						className={'tryon-btn'}
+						variant={'contained'}
+						size={'large'}
+						startIcon={<CheckroomRoundedIcon />}
+						onClick={tryOnHandler}
+					>
+						{t('AI try on')}
+					</Button>
 				)}
 			</Stack>
 
@@ -432,11 +442,11 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ seo }) => {
 				<Stack className={'back-row'}>{backBar}</Stack>
 				<Stack className={'gallery-wrap'}>
 					<ProductGallery images={product.productImages} title={product.productTitle} />
-					{/* no room for a third icon beside the buy buttons on a phone */}
+					{/* no room for a third button beside the buy buttons on a phone */}
 					{product.productTryOn && (
 						<button type={'button'} className={'tryon-fab'} onClick={tryOnHandler}>
 							<CheckroomRoundedIcon />
-							{t('Try on')}
+							{t('AI try on')}
 						</button>
 					)}
 				</Stack>
