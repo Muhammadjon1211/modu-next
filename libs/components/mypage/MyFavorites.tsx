@@ -35,7 +35,8 @@ const MyFavorites = (props: MyFavoritesType) => {
 	});
 
 	/** HANDLERS **/
-	const likeProductHandler = useProductLike(setProducts, { removeOnUnlike: true });
+	// an unliked card leaves the wishlist, but stays in the viewing history
+	const likeProductHandler = useProductLike(setProducts, { removeOnUnlike: !visited });
 
 	const handlePaginationChange = (event: ChangeEvent<unknown>, value: number) => {
 		setSearchFilter({ ...searchFilter, page: value });
@@ -49,7 +50,7 @@ const MyFavorites = (props: MyFavoritesType) => {
 				{products.length ? (
 					products.map((product) =>
 						visited ? (
-							<ProductCard key={product._id} product={product} />
+							<ProductCard key={product._id} product={product} likeProductHandler={likeProductHandler} />
 						) : (
 							<FavoriteRow key={product._id} product={product} unlikeHandler={likeProductHandler} />
 						),

@@ -336,6 +336,11 @@ export const GET_VISITED = gql`
 					memberNick
 					memberShopName
 				}
+				meLiked {
+					memberId
+					likeRefId
+					myFavorite
+				}
 			}
 			metaCounter {
 				total
